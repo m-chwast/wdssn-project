@@ -1,3 +1,4 @@
+import random
 from abc import ABC, abstractmethod
 
 
@@ -10,6 +11,9 @@ class SignalBase(ABC):
         sample_time_us : float,
         amplitude : float):
         pass
+
+    def get_freq(fmin : float, fmax : float) -> float:
+        return random.random() * (fmax - fmin) + fmin
     
 
 class Sine(SignalBase):
@@ -20,4 +24,3 @@ class Sine(SignalBase):
             sample_time_us : float = 1000, 
             amplitude : float = 1):
         print("Generating sine")
-
