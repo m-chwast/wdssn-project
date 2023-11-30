@@ -1,4 +1,5 @@
 import random
+import math
 from abc import ABC, abstractmethod
 
 
@@ -24,3 +25,9 @@ class Sine(SignalBase):
             sample_time_us : float = 1000, 
             amplitude : float = 1):
         print("Generating sine")
+
+        freq = SignalBase.get_freq(fmin, fmax)
+        for i in range(0, samples):
+            t = i * sample_time_us / 1_000_000
+            sample = amplitude * math.sin(2 * math.pi * freq * t)
+            print(sample)
