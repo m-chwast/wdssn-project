@@ -17,6 +17,12 @@ class SignalBase(ABC):
     def get_freq(fmin : float, fmax : float) -> float:
         return random.random() * (fmax - fmin) + fmin
     
+    def get_freq_limits(observation_time : float) -> (float, float):
+        # min freq is a quarter of full signal period
+        # max freq is 5 times full signal period 
+        fmin = (1 / 4) * (1 / observation_time)
+        fmax = 5 * (1 / observation_time)
+        return fmin, fmax
 
 class Sine(SignalBase):
 
