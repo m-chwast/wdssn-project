@@ -1,3 +1,3 @@
 from signals import Sine
 
-Sine.generate_random()
+Sine.generate_random(100)
