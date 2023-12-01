@@ -6,6 +6,7 @@ import numpy as np
 
 class SignalBase:
 
+    @staticmethod
     def generate_random(
             samples : int, 
             sample_time_us : float, 
@@ -30,9 +31,11 @@ class SignalBase:
         return signal        
 
 
+    @staticmethod
     def get_freq(fmin : float, fmax : float) -> float:
         return random.random() * (fmax - fmin) + fmin
     
+    @staticmethod
     def get_freq_limits(observation_time : float) -> tuple[float, float]:
         # min freq is a quarter of full signal period
         # max freq is 5 times full signal period 
@@ -40,12 +43,14 @@ class SignalBase:
         fmax = 5 * (1 / observation_time)
         return fmin, fmax
 
+    @staticmethod
     def get_phase() -> float:
         return 2 * math.pi * random.random()
 
 
 class Sine(SignalBase):
 
+    @staticmethod
     def generate_random(
             samples : int, 
             sample_time_us : float = 1000, 
@@ -57,6 +62,7 @@ class Sine(SignalBase):
             amplitude, 
             Sine.get_sample)
     
+    @staticmethod
     def get_sample(arg) -> float:
         return math.sin(arg)
     
