@@ -1,18 +1,9 @@
 import random
 import math
-from abc import ABC, abstractmethod
 import numpy as np
 
 
-class SignalBase(ABC):
-
-    @abstractmethod
-    def generate_random(
-        samples : int, 
-        fmin : float, fmax : float, 
-        sample_time_us : float,
-        amplitude : float):
-        pass
+class SignalBase:
 
     def get_freq(fmin : float, fmax : float) -> float:
         return random.random() * (fmax - fmin) + fmin
@@ -23,6 +14,7 @@ class SignalBase(ABC):
         fmin = (1 / 4) * (1 / observation_time)
         fmax = 5 * (1 / observation_time)
         return fmin, fmax
+
 
 class Sine(SignalBase):
 
