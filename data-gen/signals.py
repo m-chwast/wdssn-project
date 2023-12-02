@@ -55,3 +55,10 @@ class Sine(SignalBase):
     def get_sample(self, arg : float) -> float:
         return math.sin(arg)
     
+
+class Square(SignalBase):
+    
+    def get_sample(self, arg: float) -> float:
+        clipped_arg = arg % (2 * math.pi)
+        return 1 if clipped_arg < math.pi else 0
+    
