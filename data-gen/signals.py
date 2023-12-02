@@ -17,9 +17,9 @@ class SignalBase:
         sample_time = sample_time_us / 1_000_000
         
         observation_time = samples * sample_time
-        fmin, fmax = self.get_freq_limits(observation_time)
-        freq = self.get_freq(fmin, fmax)        
-        phase_t = (self.get_phase() / 2 * math.pi) * (1 / freq)
+        fmin, fmax = self.__get_freq_limits(observation_time)
+        freq = self.__get_freq(fmin, fmax)        
+        phase_t = (self.__get_phase() / 2 * math.pi) * (1 / freq)
 
         signal = np.zeros(samples)
         for i in range(0, samples):
@@ -31,11 +31,11 @@ class SignalBase:
         return signal        
 
     @staticmethod
-    def get_freq(fmin : float, fmax : float) -> float:
+    def __get_freq(fmin : float, fmax : float) -> float:
         return random.random() * (fmax - fmin) + fmin
     
     @staticmethod
-    def get_freq_limits(observation_time : float) -> tuple[float, float]:
+    def __get_freq_limits(observation_time : float) -> tuple[float, float]:
         # min freq is a quarter of full signal period
         # max freq is 5 times full signal period 
         fmin = (1 / 4) * (1 / observation_time)
@@ -43,7 +43,7 @@ class SignalBase:
         return fmin, fmax
 
     @staticmethod
-    def get_phase() -> float:
+    def __get_phase() -> float:
         return 2 * math.pi * random.random()
 
 
