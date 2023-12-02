@@ -1,17 +1,16 @@
 import random
 import math
-from typing import Callable
 import numpy as np
+from abc import ABC, abstractmethod
 
 
-class SignalBase:
+class SignalBase(ABC):
     
     def generate_random(
             self,
             samples : int, 
-            sample_time_us : float, 
-            amplitude : float,
-            f : Callable[[float], float]
+            sample_time_us : float = 1000, 
+            amplitude : float = 1,
         ) -> np.ndarray:
 
         sample_time = sample_time_us / 1_000_000
@@ -26,9 +25,13 @@ class SignalBase:
             t = i * sample_time + phase_t
             arg = 2 * math.pi * freq * t 
                 # f() is periodic with period of 2pi
-            sample = amplitude * f(arg)
+            sample = amplitude * self.get_sample(arg)
             signal[i] = sample
         return signal        
+
+    @abstractmethod
+    def get_sample(self, arg : float) -> float:
+        pass
 
     @staticmethod
     def __get_freq(fmin : float, fmax : float) -> float:
@@ -48,18 +51,6 @@ class SignalBase:
 
 
 class Sine(SignalBase):
-
-    def generate_random(
-            self,
-            samples : int, 
-            sample_time_us : float = 1000, 
-            amplitude : float = 1) -> np.ndarray:
-        
-        return super().generate_random(
-            samples, 
-            sample_time_us, 
-            amplitude, 
-            self.get_sample)
     
     def get_sample(self, arg : float) -> float:
         return math.sin(arg)
