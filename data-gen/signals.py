@@ -11,6 +11,7 @@ class SignalBase(ABC):
             samples : int, 
             sample_time_us : float = 1000, 
             amplitude : float = 1,
+            noise_percent : float = 10
         ) -> np.ndarray:
 
         sample_time = sample_time_us / 1_000_000
@@ -24,11 +25,12 @@ class SignalBase(ABC):
         for i in range(0, samples):
             t = i * sample_time + phase_t
             arg = 2 * math.pi * freq * t 
-                # f() is periodic with period of 2pi
             sample = amplitude * self.get_sample(arg)
+            sample += self.__get_noise(amplitude, noise_percent)
             signal[i] = sample
         return signal        
 
+    # get_sample() is periodic with period of 2pi
     @abstractmethod
     def get_sample(self, arg : float) -> float:
         pass
@@ -49,6 +51,9 @@ class SignalBase(ABC):
     def __get_phase() -> float:
         return 2 * math.pi * random.random()
 
+    @staticmethod
+    def __get_noise(amplitude : float, noise_percent : float) -> float:
+        return amplitude * (noise_percent / 100) * 2 * (random.random() - 0.5)
 
 class Sine(SignalBase):
     
