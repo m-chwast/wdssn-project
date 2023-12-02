@@ -17,9 +17,9 @@ class SignalBase:
         sample_time = sample_time_us / 1_000_000
         
         observation_time = samples * sample_time
-        fmin, fmax = SignalBase.get_freq_limits(observation_time)
-        freq = SignalBase.get_freq(fmin, fmax)        
-        phase_t = (SignalBase.get_phase() / 2 * math.pi) * (1 / freq)
+        fmin, fmax = self.get_freq_limits(observation_time)
+        freq = self.get_freq(fmin, fmax)        
+        phase_t = (self.get_phase() / 2 * math.pi) * (1 / freq)
 
         signal = np.zeros(samples)
         for i in range(0, samples):
