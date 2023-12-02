@@ -5,9 +5,9 @@ import numpy as np
 
 
 class SignalBase:
-
-    @staticmethod
+    
     def generate_random(
+            self,
             samples : int, 
             sample_time_us : float, 
             amplitude : float,
@@ -24,12 +24,11 @@ class SignalBase:
         signal = np.zeros(samples)
         for i in range(0, samples):
             t = i * sample_time + phase_t
-            # it's assumed that provided function is periodic with period of 2pi
-            arg = 2 * math.pi * freq * t    
+            arg = 2 * math.pi * freq * t 
+                # f() is periodic with period of 2pi
             sample = amplitude * f(arg)
             signal[i] = sample
         return signal        
-
 
     @staticmethod
     def get_freq(fmin : float, fmax : float) -> float:
@@ -50,19 +49,18 @@ class SignalBase:
 
 class Sine(SignalBase):
 
-    @staticmethod
     def generate_random(
+            self,
             samples : int, 
             sample_time_us : float = 1000, 
             amplitude : float = 1) -> np.ndarray:
         
-        return SignalBase.generate_random(
+        return super().generate_random(
             samples, 
             sample_time_us, 
             amplitude, 
-            Sine.get_sample)
+            self.get_sample)
     
-    @staticmethod
-    def get_sample(arg) -> float:
+    def get_sample(self, arg : float) -> float:
         return math.sin(arg)
     
