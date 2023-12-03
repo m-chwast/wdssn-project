@@ -2,6 +2,7 @@ import random
 import math
 import numpy as np
 from abc import ABC, abstractmethod
+from scipy.signal import square
 
 
 class SignalBase(ABC):
@@ -55,6 +56,7 @@ class SignalBase(ABC):
     def __get_noise(amplitude : float, noise_percent : float) -> float:
         return amplitude * (noise_percent / 100) * 2 * (random.random() - 0.5)
 
+
 class Sine(SignalBase):
     
     def get_sample(self, arg : float) -> float:
@@ -64,6 +66,5 @@ class Sine(SignalBase):
 class Square(SignalBase):
     
     def get_sample(self, arg: float) -> float:
-        clipped_arg = arg % (2 * math.pi)
-        return 1 if clipped_arg < math.pi else 0
+        return square(t=arg, duty=0.5)
     
