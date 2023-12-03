@@ -29,11 +29,18 @@ def prepare_data(
         ) -> ((np.ndarray, np.ndarray), (np.ndarray, np.ndarray)):
     labels_num = enumarate_labels(labels_txt)
     labels_cat = utils.to_categorical(labels_num)
-    
-    
+
+    split_index = int((1.0 - validation_data_rate) * len(data) - 1)
+    train_data, train_labels = data[:split_index], labels_cat[:split_index]
+    valid_data, valid_labels = data[split_index:], labels_cat[split_index:]
+
+    return ((train_data, train_labels), (valid_data, valid_labels))
+
+
 def main():
     data, labels_txt = read_data()
 
-    prepare_data(data, labels_txt)
-   
+    prepared_data = prepare_data(data, labels_txt)
+
+
 main()
