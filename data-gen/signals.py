@@ -2,8 +2,7 @@ import random
 import math
 import numpy as np
 from abc import ABC, abstractmethod
-from scipy.signal import square
-from scipy.signal import sawtooth
+from scipy.signal import square, sawtooth
 
 
 class SignalBase(ABC):
