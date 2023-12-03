@@ -1,6 +1,9 @@
 import numpy as np
 import csv
+import keras
 from keras import utils
+from keras.layers import Dense
+from keras.optimizers import SGD
 
 
 def read_data() -> tuple[np.ndarray, np.ndarray]:
@@ -36,11 +39,22 @@ def prepare_data(
 
     return ((train_data, train_labels), (valid_data, valid_labels))
 
+def create_model():
+    model = keras.Sequential()
+    model.add(Dense(units=32, activation="sigmoid", input_shape=(100,)))
+    model.add(Dense(units=32, activation="sigmoid"))
+    model.add(Dense(units=4, activation="softmax"))
+
+    model.compile(loss="categorical_crossentropy", optimizer=SGD(learning_rate=0.01), metrics=["accuracy"])
+    return model
 
 def main():
     data, labels_txt = read_data()
 
     prepared_data = prepare_data(data, labels_txt)
+
+    model = create_model()
+    #model.summary()
 
 
 main()
