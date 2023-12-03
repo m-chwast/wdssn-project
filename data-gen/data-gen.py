@@ -29,12 +29,18 @@ def generate():
             signals.append(signal)
             labels.append(label)
 
-    print("saving...")
     data_with_labels = np.column_stack((signals, labels))
 
+    # shuffle the data
+    print("shuffling...")
+    rng = np.random.default_rng()
+    shuffled_data = rng.permutation(data_with_labels)
+    
+
+    print("saving...")
     with open("data.csv", "w", newline="") as file:
         csv_writer = csv.writer(file)
-        csv_writer.writerows(data_with_labels)
+        csv_writer.writerows(shuffled_data)
 
     print("done!")
 
