@@ -2,21 +2,12 @@ from signals import Sine, Square, Sawtooth, Triangle
 import matplotlib.pyplot as plt
 
 
-for i in range(4):
-    sine = Sine().generate_random(samples=100)
-    plt.subplot(4, 4, i * 4 + 1)  
-    plt.plot(sine, '.')
+generators = [Sine(), Square(), Triangle(), Sawtooth()]
+gen_cnt = len(generators)
 
-    square = Square().generate_random(samples=100)
-    plt.subplot(4, 4, i * 4 + 2)
-    plt.plot(square, '.')
-
-    sawtooth = Sawtooth().generate_random(samples=100)
-    plt.subplot(4, 4, i * 4 + 3)
-    plt.plot(sawtooth, '.')
-
-    triangle = Triangle().generate_random(samples=100)
-    plt.subplot(4, 4, i * 4 + 4)
-    plt.plot(triangle, '.')
+for i in range(gen_cnt ** 2):
+    wave = generators[int(i % gen_cnt)].generate_random(samples=100)
+    plt.subplot(gen_cnt, gen_cnt, i + 1)  
+    plt.plot(wave, '.')
 
 plt.show()
