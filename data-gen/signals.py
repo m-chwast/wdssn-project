@@ -27,16 +27,26 @@ class SignalBase(ABC):
         for i in range(0, samples):
             t = i * sample_time + phase_t
             arg = 2 * math.pi * freq * t 
-            sample = amplitude * self.get_sample(arg)
-            sample += self.__get_noise(amplitude, noise_percent)
+            
+            sample = self.get_sample(arg)
+            noise = self.__get_noise(amplitude=1, noise_percent=noise_percent)
+            sample += noise
+            
             signal[i] = sample
+        signal = self.normalize(signal, amplitude)
         return signal        
 
     # get_sample() is periodic with period of 2pi
+    # the values returned should be in range of [-1, 1]
     @abstractmethod
     def get_sample(self, arg : float) -> float:
         pass
 
+    @staticmethod
+    def normalize(arr : np.ndarray, norm_amplitude : float) -> np.ndarray:
+        norm_coeff = norm_amplitude / max(abs(max(arr)), abs(min(arr)))
+        return arr.copy() * norm_coeff
+    
     @staticmethod
     def __get_freq(fmin : float, fmax : float) -> float:
         return random.random() * (fmax - fmin) + fmin
