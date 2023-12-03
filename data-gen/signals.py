@@ -6,14 +6,14 @@ from scipy.signal import square, sawtooth
 
 
 class SignalBase(ABC):
-    
+
     def generate_random(
             self,
             samples : int, 
             sample_time_us : float = 1000, 
             amplitude : float = 1,
             noise_percent : float = 10
-        ) -> np.ndarray:
+        ) -> tuple[np.ndarray, str]:
 
         sample_time = sample_time_us / 1_000_000
         
@@ -33,13 +33,17 @@ class SignalBase(ABC):
             
             signal[i] = sample
         signal = self.normalize(signal, amplitude)
-        return signal        
+        return signal, self.get_label()    
 
     # get_sample() is periodic with period of 2pi
     # the values returned should be in range of [-1, 1]
     @abstractmethod
     def get_sample(self, arg : float) -> float:
         pass
+
+    @abstractmethod
+    def get_label(self) -> str:
+        return "base"
 
     @staticmethod
     def normalize(arr : np.ndarray, norm_amplitude : float) -> np.ndarray:
@@ -72,11 +76,17 @@ class Sine(SignalBase):
     def get_sample(self, arg : float) -> float:
         return math.sin(arg)
     
+    def get_label(self) -> str:
+        return "sine"
+    
 
 class Square(SignalBase):
     
     def get_sample(self, arg: float) -> float:
         return square(t=arg, duty=0.5)
+    
+    def get_label(self) -> str:
+        return "square"
     
 
 class Sawtooth(SignalBase):
@@ -84,9 +94,15 @@ class Sawtooth(SignalBase):
     def get_sample(self, arg : float) -> float:
         return sawtooth(t=arg)
     
+    def get_label(self) -> str:
+        return "sawtooth"
+    
 
 class Triangle(SignalBase):
 
     def get_sample(self, arg: float) -> float:
         return sawtooth(t=arg, width=0.5)
+    
+    def get_label(self) -> str:
+        return "triangle"
     
