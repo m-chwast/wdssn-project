@@ -22,11 +22,18 @@ def enumarate_labels(labels_txt : list[str]) -> np.ndarray:
     labels_numeric = [string_to_numeric[string] for string in labels_txt]
     return np.array(labels_numeric)
 
-def main():
-    data, labels_txt = read_data()
-
+def prepare_data(
+        data : np.ndarray, 
+        labels_txt: np.ndarray,
+        validation_data_rate : float = 0.1
+        ) -> ((np.ndarray, np.ndarray), (np.ndarray, np.ndarray)):
     labels_num = enumarate_labels(labels_txt)
     labels_cat = utils.to_categorical(labels_num)
     
+    
+def main():
+    data, labels_txt = read_data()
+
+    prepare_data(data, labels_txt)
    
 main()
