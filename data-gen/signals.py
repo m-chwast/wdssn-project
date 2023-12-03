@@ -75,3 +75,9 @@ class Sawtooth(SignalBase):
     def get_sample(self, arg : float) -> float:
         return sawtooth(t=arg)
     
+
+class Triangle(SignalBase):
+
+    def get_sample(self, arg: float) -> float:
+        return sawtooth(t=arg, width=0.5)
+    
