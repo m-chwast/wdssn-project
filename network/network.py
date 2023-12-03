@@ -15,7 +15,8 @@ def read_data() -> tuple[np.ndarray, np.ndarray]:
         data_array = np.array(data_with_labels)
 
         # separate the array back into data and labels
-        loaded_data = data_array[:, :-1]  # all columns except the last one
+        loaded_data_str = data_array[:, :-1]  # all columns except the last one
+        loaded_data = np.array(loaded_data_str, dtype=np.float64)
         loaded_labels = data_array[:, -1]  # the last column
 
         return loaded_data, loaded_labels
@@ -33,7 +34,7 @@ def prepare_data(
     labels_num = enumarate_labels(labels_txt)
     labels_cat = utils.to_categorical(labels_num)
 
-    split_index = int((1.0 - validation_data_rate) * len(data) - 1)
+    split_index = int((1.0 - validation_data_rate) * len(data))
     train_data, train_labels = data[:split_index], labels_cat[:split_index]
     valid_data, valid_labels = data[split_index:], labels_cat[split_index:]
 
@@ -47,6 +48,7 @@ def create_model():
 
     model.compile(loss="categorical_crossentropy", optimizer=SGD(learning_rate=0.01), metrics=["accuracy"])
     return model
+
 
 def main():
     data, labels_txt = read_data()
