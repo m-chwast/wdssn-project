@@ -9,12 +9,12 @@ signals = []
 labels = []
 
 for i in range(gen_cnt ** 2):
-    wave, label = generators[int(i % gen_cnt)].generate_random(samples=100)
+    signal, label = generators[int(i % gen_cnt)].generate_random(samples=100)
     
-    signals.append(wave)
+    signals.append(signal)
     labels.append(label)
 
     plt.subplot(gen_cnt, gen_cnt, i + 1)
-    plt.plot(wave, '.')
+    plt.plot(signal, '.')
 
 plt.show()
