@@ -23,10 +23,11 @@ def generate():
     labels = []
 
     print("generating...")
-    for i in range(100):
-        signal, label = generators[int(i % len(generators))].generate_random(samples=100)
-        signals.append(signal)
-        labels.append(label)
+    for gen in generators:
+        for i in range(200):
+            signal, label = gen.generate_random(samples=100)
+            signals.append(signal)
+            labels.append(label)
 
     print("saving...")
     data_with_labels = np.column_stack((signals, labels))
