@@ -1,5 +1,6 @@
 import numpy as np
 import csv
+from keras import utils
 
 
 def read_data() -> tuple[np.ndarray, np.ndarray]:
@@ -24,6 +25,8 @@ def enumarate_labels(labels_txt : list[str]) -> np.ndarray:
 def main():
     data, labels_txt = read_data()
 
-    labels = enumarate_labels(labels_txt)
+    labels_num = enumarate_labels(labels_txt)
+    labels_cat = utils.to_categorical(labels_num)
+    
    
 main()
