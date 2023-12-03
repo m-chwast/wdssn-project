@@ -3,6 +3,7 @@ import math
 import numpy as np
 from abc import ABC, abstractmethod
 from scipy.signal import square
+from scipy.signal import sawtooth
 
 
 class SignalBase(ABC):
@@ -67,4 +68,10 @@ class Square(SignalBase):
     
     def get_sample(self, arg: float) -> float:
         return square(t=arg, duty=0.5)
+    
+
+class Sawtooth(SignalBase):
+
+    def get_sample(self, arg : float) -> float:
+        return sawtooth(t=arg)
     
