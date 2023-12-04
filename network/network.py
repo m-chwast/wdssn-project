@@ -3,7 +3,7 @@ import csv
 from matplotlib import pyplot as plt
 import keras
 from keras import utils
-from keras.layers import Dense
+from keras.layers import Dense, Input
 from keras.optimizers import SGD
 
 
@@ -43,7 +43,8 @@ def prepare_data(
 
 def create_model():
     model = keras.Sequential()
-    model.add(Dense(units=32, activation="tanh", input_shape=(100,)))
+    model.add(Input(shape=(100,)))
+    model.add(Dense(units=32, activation="tanh"))
     model.add(Dense(units=32, activation="tanh"))
     model.add(Dense(units=4, activation="softmax"))
 
