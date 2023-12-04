@@ -12,7 +12,7 @@ class SignalBase(ABC):
             samples : int, 
             sample_time_us : float = 1000, 
             amplitude : float = 1,
-            noise_percent : float = 2
+            noise_percent : float = 10
         ) -> tuple[np.ndarray, str]:
 
         sample_time = sample_time_us / 1_000_000
