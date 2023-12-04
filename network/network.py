@@ -70,7 +70,7 @@ def plot_signals(signals : np.ndarray, labels : np.ndarray):
     plt.tight_layout()
     plt.show()
 
-def test_predictions(model : keras.Sequential, data, labels, cnt : int = 8):
+def test_predictions(model : keras.Sequential, data, labels, cnt : int = 6):
     indexes = np.random.randint(low=0, high=len(data), size=cnt)
     pred_data = []
     pred_labels = []
@@ -79,6 +79,11 @@ def test_predictions(model : keras.Sequential, data, labels, cnt : int = 8):
         pred_labels.append("good: " + str(labels[i]))
 
     predictions = model.predict(x=np.array(pred_data), batch_size=cnt)
+
+    for pred in predictions:
+        for i in range(0, len(pred)):
+            if pred[i] < 0.001:
+                pred[i] = 0
     
     for i in range(0, cnt):
         pred_labels[i] += ", predicted: " + str(predictions[i])
