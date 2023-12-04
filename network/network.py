@@ -1,5 +1,6 @@
 import numpy as np
 import csv
+from matplotlib import pyplot as plt
 import keras
 from keras import utils
 from keras.layers import Dense
@@ -56,11 +57,22 @@ def model_train(
     valid_data, valid_labels = np.array(data[1][0]), np.array(data[1][1])
 
     validation=(valid_data, valid_labels)
-    model.fit(x=train_data, y=train_labels, batch_size=128, epochs=50, verbose=1, validation_data=validation)
+    model.fit(x=train_data, y=train_labels, batch_size=128, epochs=10, verbose=1, validation_data=validation)
+
+def plot_signals(signals : np.ndarray, labels : np.ndarray):
+    cnt = len(signals)
+    for i in range(0, cnt):
+        signal = signals[i]
+        label = labels[i]
+        plt.subplot(cnt, 1, i + 1)
+        plt.plot(signal)
+        plt.title(label)
+    plt.show()
 
 
 def main():
     data, labels_txt = read_data()
+    #plot_signals(data[:6], labels_txt[:6])
 
     prepared_data = prepare_data(data, labels_txt)
 
