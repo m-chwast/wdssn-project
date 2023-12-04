@@ -43,8 +43,8 @@ def prepare_data(
 
 def create_model():
     model = keras.Sequential()
-    model.add(Dense(units=100, activation="sigmoid", input_shape=(100,)))
-    model.add(Dense(units=100, activation="sigmoid"))
+    model.add(Dense(units=32, activation="tanh", input_shape=(100,)))
+    model.add(Dense(units=32, activation="tanh"))
     model.add(Dense(units=4, activation="softmax"))
 
     model.compile(loss="categorical_crossentropy", optimizer=SGD(learning_rate=0.01), metrics=["accuracy"])
@@ -57,7 +57,7 @@ def model_train(
     valid_data, valid_labels = np.array(data[1][0]), np.array(data[1][1])
 
     validation=(valid_data, valid_labels)
-    model.fit(x=train_data, y=train_labels, batch_size=128, epochs=10, verbose=1, validation_data=validation)
+    model.fit(x=train_data, y=train_labels, batch_size=8, epochs=15, verbose=1, validation_data=validation)
 
 def plot_signals(signals : np.ndarray, labels : np.ndarray):
     cnt = len(signals)
@@ -72,12 +72,12 @@ def plot_signals(signals : np.ndarray, labels : np.ndarray):
 
 def main():
     data, labels_txt = read_data()
-    #plot_signals(data[:6], labels_txt[:6])
+    plot_signals(data[:12], labels_txt[:12])
 
     prepared_data = prepare_data(data, labels_txt)
 
     model = create_model()
-    #model.summary()
+    model.summary()
 
     model_train(model, prepared_data)
 
