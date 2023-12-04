@@ -22,7 +22,7 @@ def model_train(
     valid_data, valid_labels = np.array(data[1][0]), np.array(data[1][1])
     
     validation=(valid_data, valid_labels)
-    model.fit(x=train_data, y=train_labels, batch_size=8, epochs=15, verbose=1, validation_data=validation)
+    model.fit(x=train_data, y=train_labels, batch_size=8, epochs=10, verbose=1, validation_data=validation)
 
 
 def main():
