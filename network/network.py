@@ -92,14 +92,13 @@ def test_predictions(model : keras.Sequential, data, labels, cnt : int = 6):
 
 def main():
     data, labels_txt = read_data()
-    #plot_signals(data[:12], labels_txt[:12])
 
     prepared_data = prepare_data(data, labels_txt)
 
     model = create_model()
     model.summary()
 
-    test_predictions(model, prepared_data[0][0], prepared_data[0][1])
+    #test_predictions(model, prepared_data[0][0], prepared_data[0][1])
 
     model_train(model, prepared_data)
 
