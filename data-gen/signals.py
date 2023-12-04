@@ -12,7 +12,7 @@ class SignalBase(ABC):
             samples : int, 
             sample_time_us : float = 1000, 
             amplitude : float = 1,
-            noise_percent : float = 10
+            noise_percent : float = 2
         ) -> tuple[np.ndarray, str]:
 
         sample_time = sample_time_us / 1_000_000
@@ -58,8 +58,8 @@ class SignalBase(ABC):
     def __get_freq_limits(observation_time : float) -> tuple[float, float]:
         # min freq is a quarter of full signal period
         # max freq is 5 times full signal period 
-        fmin = (1 / 4) * (1 / observation_time)
-        fmax = 5 * (1 / observation_time)
+        fmin = (95/100) * (1 / observation_time)
+        fmax = (105/100) * (1 / observation_time)
         return fmin, fmax
 
     @staticmethod

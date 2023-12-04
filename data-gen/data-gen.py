@@ -24,7 +24,7 @@ def generate():
 
     print("generating...")
     for gen in generators:
-        for i in range(200):
+        for i in range(5000):
             signal, label = gen.generate_random(samples=100)
             signals.append(signal)
             labels.append(label)
