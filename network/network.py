@@ -67,19 +67,38 @@ def plot_signals(signals : np.ndarray, labels : np.ndarray):
         plt.subplot(cnt, 1, i + 1)
         plt.plot(signal)
         plt.title(label)
+    plt.tight_layout()
     plt.show()
 
+def test_predictions(model : keras.Sequential, data, labels, cnt : int = 8):
+    indexes = np.random.randint(low=0, high=len(data), size=cnt)
+    pred_data = []
+    pred_labels = []
+    for i in indexes:
+        pred_data.append(data[i])
+        pred_labels.append("good: " + str(labels[i]))
+
+    predictions = model.predict(x=np.array(pred_data), batch_size=cnt)
+    
+    for i in range(0, cnt):
+        pred_labels[i] += ", predicted: " + str(predictions[i])
+    
+    plot_signals(np.array(pred_data), np.array(pred_labels))
 
 def main():
     data, labels_txt = read_data()
-    plot_signals(data[:12], labels_txt[:12])
+    #plot_signals(data[:12], labels_txt[:12])
 
     prepared_data = prepare_data(data, labels_txt)
 
     model = create_model()
     model.summary()
 
+    test_predictions(model, prepared_data[0][0], prepared_data[0][1])
+
     model_train(model, prepared_data)
+
+    test_predictions(model, prepared_data[0][0], prepared_data[0][1])
 
 
 main()
