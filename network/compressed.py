@@ -2,6 +2,7 @@ import numpy as np
 from keras import Sequential
 from keras.layers import Dense, Input
 from keras.optimizers import SGD
+import tensorflow as tf
 import tensorflow_model_optimization as tfmot
 import dataproc
 
@@ -26,11 +27,17 @@ def model_train(
     validation=(valid_data, valid_labels)
     model.fit(x=train_data, y=train_labels, batch_size=16, epochs=epochs, verbose=1, validation_data=validation)
 
-def create_model_quantized(model : Sequential) -> Sequential:
+def create_model_quant_aware(model : Sequential) -> Sequential:
     quant_model = tfmot.quantization.keras.quantize_model(model)
     quant_model.compile(loss="categorical_crossentropy", optimizer=SGD(learning_rate=0.01), metrics=["accuracy"])
     quant_model.summary()
     return quant_model
+
+def get_quantized_model(q_aware_model : Sequential):
+    converter = tf.lite.TFLiteConverter.from_keras_model(q_aware_model)
+    converter.optimizations = [tf.lite.Optimize.DEFAULT]
+    quantized_tflite_model = converter.convert()
+    return quantized_tflite_model
 
 
 def main():
@@ -42,8 +49,10 @@ def main():
 
     model_train(model, prepared_data)
 
-    model_quantized = create_model_quantized(model)
+    model_quantized = create_model_quant_aware(model)
     # train quantized model with quantization-aware training
     model_train(model_quantized, prepared_data, epochs=2)
+
+    model_quantized = get_quantized_model(model_quantized)
 
 main()
