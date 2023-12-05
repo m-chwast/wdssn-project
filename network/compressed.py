@@ -2,6 +2,7 @@ import numpy as np
 from keras import Sequential
 from keras.layers import Dense, Input
 from keras.optimizers import SGD
+import tensorflow_model_optimization as tfmot
 import dataproc
 
 
@@ -22,7 +23,13 @@ def model_train(
     valid_data, valid_labels = np.array(data[1][0]), np.array(data[1][1])
     
     validation=(valid_data, valid_labels)
-    model.fit(x=train_data, y=train_labels, batch_size=8, epochs=10, verbose=1, validation_data=validation)
+    model.fit(x=train_data, y=train_labels, batch_size=16, epochs=10, verbose=1, validation_data=validation)
+
+def create_model_quantized(model : Sequential) -> Sequential:
+    quant_model = tfmot.quantization.keras.quantize_model(model)
+    quant_model.compile(loss="categorical_crossentropy", optimizer=SGD(learning_rate=0.01), metrics=["accuracy"])
+    quant_model.summary()
+    return quant_model
 
 
 def main():
@@ -33,5 +40,7 @@ def main():
     model.summary()
 
     model_train(model, prepared_data)
+
+    model_quantized = create_model_quantized(model)
 
 main()
