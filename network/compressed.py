@@ -18,12 +18,13 @@ def create_model() -> Sequential:
 
 def model_train(
         model : Sequential, 
-        data : ((np.ndarray, np.ndarray), (np.ndarray, np.ndarray))):
+        data : ((np.ndarray, np.ndarray), (np.ndarray, np.ndarray)),
+        epochs = 10):
     train_data, train_labels = np.array(data[0][0]), np.array(data[0][1])
     valid_data, valid_labels = np.array(data[1][0]), np.array(data[1][1])
     
     validation=(valid_data, valid_labels)
-    model.fit(x=train_data, y=train_labels, batch_size=16, epochs=10, verbose=1, validation_data=validation)
+    model.fit(x=train_data, y=train_labels, batch_size=16, epochs=epochs, verbose=1, validation_data=validation)
 
 def create_model_quantized(model : Sequential) -> Sequential:
     quant_model = tfmot.quantization.keras.quantize_model(model)
@@ -42,5 +43,7 @@ def main():
     model_train(model, prepared_data)
 
     model_quantized = create_model_quantized(model)
+    # train quantized model with quantization-aware training
+    model_train(model_quantized, prepared_data, epochs=2)
 
 main()
