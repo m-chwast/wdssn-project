@@ -1,11 +1,12 @@
-from signals import Sine, Square, Sawtooth, Triangle
+from signals import Sine, Square, Sawtooth, Triangle, WhiteNoise, EKG
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
 
 
 def get_generators():
-    return [Sine(), Square(), Triangle(), Sawtooth()]
+    return [Sine(), WhiteNoise(), EKG()]
+    # return [Sine(), Square(), Triangle(), Sawtooth(), WhiteNoise()]
 
 def plot_sample():
     generators = get_generators()
@@ -14,7 +15,7 @@ def plot_sample():
     for i in range(gen_cnt ** 2):
         signal, label = generators[int(i % gen_cnt)].generate_random(samples=100)
         plt.subplot(gen_cnt, gen_cnt, i + 1)
-        plt.plot(signal, '.')
+        plt.plot(signal)
     plt.show()
 
 def generate():
@@ -45,7 +46,8 @@ def generate():
     print("done!")
 
 def main():
-    #plot_sample()
-    generate()
+    plot_sample()
+    # generate()
 
-main()
+if __name__ == "__main__":
+    main()
