@@ -10,10 +10,11 @@ def create_model() -> Sequential:
     model.add(Input(shape=(100,)))
     model.add(Dense(units=32, activation="tanh"))
     model.add(Dense(units=32, activation="tanh"))
-    model.add(Dense(units=4, activation="softmax"))
+    model.add(Dense(units=6, activation="softmax"))
 
     model.compile(loss="categorical_crossentropy", optimizer=SGD(learning_rate=0.01), metrics=["accuracy"])
     return model
+
 
 def model_train(
         model : Sequential, 
@@ -41,4 +42,5 @@ def main():
     dataproc.test_predictions(model, train_data, train_labels)
 
 
-main()
+if __name__ == '__main__':
+    main()
