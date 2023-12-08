@@ -5,7 +5,21 @@ import keras
 from keras import utils
 from keras.layers import Dense
 from keras.optimizers import SGD
+from sklearn.metrics import confusion_matrix
+import sklearn.metrics as metr
 
+
+SignalEnum = {
+    "Sine": 0,
+    "Square": 1,
+    "Triangle": 2,
+    "Sawtooth": 3,
+    "WhiteNoise": 4,
+    "EKG": 5
+}
+SignalEnumLabel = [key[0] for key in sorted([v for v in SignalEnum.items()], key=lambda v: v[1])]
+def getMostProbableIndex(arrInd):
+    return np.where(max(arrInd) == arrInd)[0][0]
 
 def read_data() -> tuple[np.ndarray, np.ndarray]:
     with open("data.csv", "r") as file:
@@ -23,8 +37,7 @@ def read_data() -> tuple[np.ndarray, np.ndarray]:
         return loaded_data, loaded_labels
     
 def enumarate_labels(labels_txt : list[str]) -> np.ndarray:
-    string_to_numeric = {string: i for i, string in enumerate(set(labels_txt))}
-    labels_numeric = [string_to_numeric[string] for string in labels_txt]
+    labels_numeric = [SignalEnum[string] for string in labels_txt]
     return np.array(labels_numeric)
 
 def prepare_data(
@@ -45,7 +58,7 @@ def create_model():
     model = keras.Sequential()
     model.add(Dense(units=32, activation="tanh", input_shape=(100,)))
     model.add(Dense(units=32, activation="tanh"))
-    model.add(Dense(units=4, activation="softmax"))
+    model.add(Dense(units=6, activation="softmax"))
 
     model.compile(loss="categorical_crossentropy", optimizer=SGD(learning_rate=0.01), metrics=["accuracy"])
     return model
@@ -70,13 +83,29 @@ def plot_signals(signals : np.ndarray, labels : np.ndarray):
     plt.tight_layout()
     plt.show()
 
+def show_confusion_matrix(actual, predicted):
+    number_of_predicted = 0
+    for a, p in zip(actual, predicted):
+        if a == p:
+            number_of_predicted += 1
+    cm = confusion_matrix(actual, predicted)
+    labels = [list(SignalEnum.keys())[v] for v in sorted(set(actual) | set(predicted))]
+    plotCM = metr.ConfusionMatrixDisplay(confusion_matrix = cm, display_labels = labels)
+    plotCM.plot()
+    print(f"Total Accuracy {number_of_predicted / len(actual) * 100}")
+    plt.show()
+
 def test_predictions(model : keras.Sequential, data, labels, cnt : int = 6):
     indexes = np.random.randint(low=0, high=len(data), size=cnt)
     pred_data = []
     pred_labels = []
+    
+    actual = []
     for i in indexes:
         pred_data.append(data[i])
-        pred_labels.append("good: " + str(labels[i]))
+        predictedTypeInd = getMostProbableIndex(labels[i])
+        pred_labels.append(f"good: {labels[i]}({SignalEnumLabel[predictedTypeInd]})")
+        actual.append(predictedTypeInd)
 
     predictions = model.predict(x=np.array(pred_data), batch_size=cnt)
 
@@ -85,14 +114,18 @@ def test_predictions(model : keras.Sequential, data, labels, cnt : int = 6):
             if pred[i] < 0.001:
                 pred[i] = 0
     
-    for i in range(0, cnt):
-        pred_labels[i] += ", predicted: " + str(predictions[i])
+    predicted = []
+    for i in range(len(predictions)):
+        predictedTypeInd = getMostProbableIndex(predictions[i])
+        pred_labels[i] += f", predicted: {predictions[i]}({SignalEnumLabel[predictedTypeInd]})"
+        predicted.append(predictedTypeInd)
     
-    plot_signals(np.array(pred_data), np.array(pred_labels))
+    show_confusion_matrix(actual, predicted)
+    plot_signals(np.array(pred_data)[:cnt], np.array(pred_labels)[:cnt])
 
 def main():
     data, labels_txt = read_data()
-    #plot_signals(data[:12], labels_txt[:12])
+    plot_signals(data[:8], labels_txt[:8])
 
     prepared_data = prepare_data(data, labels_txt)
 
@@ -106,4 +139,5 @@ def main():
     test_predictions(model, prepared_data[0][0], prepared_data[0][1])
 
 
-main()
+if __name__ == '__main__':
+    main()
