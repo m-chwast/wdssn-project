@@ -59,6 +59,52 @@ def compare_model_sizes(original_model, quantized_tflite_model):
     print("Float model in kb:", os.path.getsize(float_file) / float(2**10))
     print("Quantized model in kb:", os.path.getsize(quant_file) / float(2**10))
 
+
+def evaluate_tflite_model(interpreter, test_data, test_labels):
+    input_index = interpreter.get_input_details()[0]["index"]
+    output_index = interpreter.get_output_details()[0]["index"]
+
+    # Run predictions on every image in the "test" dataset.
+    prediction_digits = []
+    for i, test_data in enumerate(test_data):
+        if i % 1000 == 0:
+            print('Evaluated on {n} results so far.'.format(n=i))
+        # Pre-processing: add batch dimension and convert to float32 to match with
+        # the model's input data format.
+        test_data = np.expand_dims(test_data, axis=0).astype(np.float32)
+        interpreter.set_tensor(input_index, test_data)
+
+        # Run inference.
+        interpreter.invoke()
+
+        # Post-processing: remove batch dimension and find the digit with highest
+        # probability.
+        output = interpreter.tensor(output_index)
+        digit = np.argmax(output()[0])
+        prediction_digits.append(digit)
+
+
+    # Compare prediction results with ground truth labels to calculate accuracy.
+    prediction_digits = np.array(prediction_digits)
+
+    correct_digits = []
+    for label in test_labels:
+        correct_digits.append(np.argmax(label))
+    
+    accuracy = (prediction_digits == correct_digits).mean()
+    return accuracy
+
+
+def test_quantized_model(tflite_model, test_data, test_labels):
+    interpreter = tf.lite.Interpreter(model_content=tflite_model)
+    interpreter.allocate_tensors()
+
+    test_accuracy = evaluate_tflite_model(interpreter, test_data, test_labels)
+
+    print('Quant TFLite test_accuracy:', test_accuracy)
+    #print('Quant TF test accuracy:', q_aware_model_accuracy)
+
+
 def main():
     data, labels_txt = dataproc.read_data()
     prepared_data = dataproc.prepare_data(data, labels_txt)
@@ -74,9 +120,11 @@ def main():
 
     model_tflite_quantized = get_quantized_model(model_quant_aware)
 
-    # train_data, train_labels = prepared_data[0][0], prepared_data[0][1]
+    train_data, train_labels = prepared_data[0][0], prepared_data[0][1]
     # dataproc.test_predictions(model, train_data, train_labels, 10000)
     
     compare_model_sizes(original_model=model, quantized_tflite_model=model_tflite_quantized)
+
+    test_quantized_model(model_tflite_quantized, train_data, train_labels)
 
 main()
