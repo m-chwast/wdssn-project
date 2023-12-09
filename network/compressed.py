@@ -1,4 +1,6 @@
 import numpy as np
+import tempfile
+import os
 from keras import Sequential
 from keras.layers import Dense, Input
 from keras.optimizers import SGD
@@ -39,6 +41,23 @@ def get_quantized_model(q_aware_model : Sequential):
     quantized_tflite_model = converter.convert()
     return quantized_tflite_model
 
+def compare_model_sizes(original_model, quantized_tflite_model):
+    # Create float TFLite model.
+    float_converter = tf.lite.TFLiteConverter.from_keras_model(original_model)
+    float_tflite_model = float_converter.convert()
+
+    # Measure sizes of models.
+    _, float_file = tempfile.mkstemp('.tflite')
+    _, quant_file = tempfile.mkstemp('.tflite')
+
+    with open(quant_file, 'wb') as f:
+        f.write(quantized_tflite_model)
+
+    with open(float_file, 'wb') as f:
+        f.write(float_tflite_model)
+
+    print("Float model in kb:", os.path.getsize(float_file) / float(2**10))
+    print("Quantized model in kb:", os.path.getsize(quant_file) / float(2**10))
 
 def main():
     data, labels_txt = dataproc.read_data()
@@ -58,5 +77,6 @@ def main():
     # train_data, train_labels = prepared_data[0][0], prepared_data[0][1]
     # dataproc.test_predictions(model, train_data, train_labels, 10000)
     
+    compare_model_sizes(original_model=model, quantized_tflite_model=model_tflite_quantized)
 
 main()
