@@ -49,11 +49,11 @@ def main():
 
     model_train(model, prepared_data)
 
-    model_quantized = create_model_quant_aware(model)
-    # train quantized model with quantization-aware training
-    model_train(model_quantized, prepared_data, epochs=2)
+    model_quant_aware = create_model_quant_aware(model)
+    # train model with quantization-aware training
+    model_train(model_quant_aware, prepared_data, epochs=2)
 
-    model_quantized = get_quantized_model(model_quantized)
+    model_tflite_quantized = get_quantized_model(model_quant_aware)
 
     # train_data, train_labels = prepared_data[0][0], prepared_data[0][1]
     # dataproc.test_predictions(model, train_data, train_labels, 10000)
