@@ -64,10 +64,10 @@ def evaluate_tflite_model(interpreter, test_data, test_labels):
     input_index = interpreter.get_input_details()[0]["index"]
     output_index = interpreter.get_output_details()[0]["index"]
 
-    # Run predictions on every image in the "test" dataset.
-    prediction_digits = []
+    # Run predictions on every sample in the provided dataset.
+    predicted = []
     for i, test_data in enumerate(test_data):
-        if i % 1000 == 0:
+        if i % 5000 == 0:
             print('Evaluated on {n} results so far.'.format(n=i))
         # Pre-processing: add batch dimension and convert to float32 to match with
         # the model's input data format.
@@ -81,29 +81,28 @@ def evaluate_tflite_model(interpreter, test_data, test_labels):
         # probability.
         output = interpreter.tensor(output_index)
         digit = np.argmax(output()[0])
-        prediction_digits.append(digit)
+        predicted.append(digit)
 
 
     # Compare prediction results with ground truth labels to calculate accuracy.
-    prediction_digits = np.array(prediction_digits)
+    predicted = np.array(predicted)
 
-    correct_digits = []
+    correct = []
     for label in test_labels:
-        correct_digits.append(np.argmax(label))
+        correct.append(np.argmax(label))
     
-    accuracy = (prediction_digits == correct_digits).mean()
-    return accuracy
+    return predicted, correct
 
 
 def test_quantized_model(tflite_model, test_data, test_labels):
     interpreter = tf.lite.Interpreter(model_content=tflite_model)
     interpreter.allocate_tensors()
 
-    test_accuracy = evaluate_tflite_model(interpreter, test_data, test_labels)
+    predicted, correct = evaluate_tflite_model(interpreter, test_data, test_labels)
 
+    test_accuracy = (predicted == correct).mean()
     print('Quant TFLite test_accuracy:', test_accuracy)
-    #print('Quant TF test accuracy:', q_aware_model_accuracy)
-
+    dataproc.show_confusion_matrix(actual=correct, predicted=predicted)
 
 def main():
     data, labels_txt = dataproc.read_data()
