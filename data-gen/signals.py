@@ -32,7 +32,7 @@ class SignalBase(ABC):
             sample += noise
             
             signal[i] = sample
-        signal = self.normalize(signal, amplitude)
+        signal = self.normalize(signal, amplitude) / 2 + 0.5 * amplitude
         return signal, self.get_label()    
 
     # get_sample() is periodic with period of 2pi
@@ -41,9 +41,9 @@ class SignalBase(ABC):
     def get_sample(self, arg : float) -> float:
         pass
 
-    @abstractmethod
-    def get_label(self) -> str:
-        return "base"
+    @classmethod
+    def get_label(cls) -> str:
+        return cls.__name__
 
     @staticmethod
     def normalize(arr : np.ndarray, norm_amplitude : float) -> np.ndarray:
@@ -73,11 +73,8 @@ class SignalBase(ABC):
 
 class Sine(SignalBase):
     
-    def get_sample(self, arg : float) -> float:
+    def get_sample(self, arg: float) -> float:
         return math.sin(arg)
-    
-    def get_label(self) -> str:
-        return "sine"
     
 
 class Square(SignalBase):
@@ -85,24 +82,30 @@ class Square(SignalBase):
     def get_sample(self, arg: float) -> float:
         return square(t=arg, duty=0.5)
     
-    def get_label(self) -> str:
-        return "square"
-    
 
 class Sawtooth(SignalBase):
 
-    def get_sample(self, arg : float) -> float:
+    def get_sample(self, arg: float) -> float:
         return sawtooth(t=arg)
-    
-    def get_label(self) -> str:
-        return "sawtooth"
     
 
 class Triangle(SignalBase):
 
     def get_sample(self, arg: float) -> float:
         return sawtooth(t=arg, width=0.5)
-    
-    def get_label(self) -> str:
-        return "triangle"
+
+
+class WhiteNoise(SignalBase):
+
+    def get_sample(self, arg: float) -> float:
+        return np.random.normal(-1, 1, 1)
+
+
+class EKG(SignalBase):
+    N = 10
+    RATIO = 0.235
+    def get_sample(self, arg: float) -> float:
+        return self.RATIO * sum(
+            math.sin(0.2 * i * math.pi * arg - i / 2 * math.pi) * math.cos(1.1 * i * math.pi * arg) for i in range(self.N)
+        )
     
