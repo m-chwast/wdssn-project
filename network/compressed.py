@@ -60,6 +60,23 @@ def compare_model_sizes(original_model, quantized_tflite_model):
     print("Quantized model in kb:", os.path.getsize(quant_file) / float(2**10))
 
 
+def evaluate_one(interpreter, test_data):
+    input_index = interpreter.get_input_details()[0]["index"]
+    output_index = interpreter.get_output_details()[0]["index"]
+    # Pre-processing: add batch dimension and convert to float32 to match with
+    # the model's input data format.
+    test_data = np.expand_dims(test_data, axis=0).astype(np.float32)
+    interpreter.set_tensor(input_index, test_data)
+
+    # Run inference.
+    interpreter.invoke()
+
+    # Post-processing: remove batch dimension and find the digit with highest
+    # probability.
+    output = interpreter.tensor(output_index)
+    digit = np.argmax(output()[0])
+    return digit
+
 def evaluate_tflite_model(interpreter, test_data, test_labels):
     input_index = interpreter.get_input_details()[0]["index"]
     output_index = interpreter.get_output_details()[0]["index"]
@@ -69,20 +86,10 @@ def evaluate_tflite_model(interpreter, test_data, test_labels):
     for i, test_data in enumerate(test_data):
         if i % 5000 == 0:
             print('Evaluated on {n} results so far.'.format(n=i))
-        # Pre-processing: add batch dimension and convert to float32 to match with
-        # the model's input data format.
-        test_data = np.expand_dims(test_data, axis=0).astype(np.float32)
-        interpreter.set_tensor(input_index, test_data)
-
-        # Run inference.
-        interpreter.invoke()
-
-        # Post-processing: remove batch dimension and find the digit with highest
-        # probability.
-        output = interpreter.tensor(output_index)
-        digit = np.argmax(output()[0])
+        
+        digit = evaluate_one(interpreter, test_data)
+         
         predicted.append(digit)
-
 
     # Compare prediction results with ground truth labels to calculate accuracy.
     predicted = np.array(predicted)
