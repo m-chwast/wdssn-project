@@ -55,4 +55,8 @@ def main():
 
     model_quantized = get_quantized_model(model_quantized)
 
+    # train_data, train_labels = prepared_data[0][0], prepared_data[0][1]
+    # dataproc.test_predictions(model, train_data, train_labels, 10000)
+    
+
 main()
