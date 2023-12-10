@@ -137,4 +137,5 @@ def main():
     test_quantized_model(model_tflite_quantized, train_data, train_labels)
 
 
-main()
+if __name__ == '__main__':
+    main()
