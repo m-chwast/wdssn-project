@@ -56,6 +56,12 @@ Console& Console::operator<<(const char* msg) {
 	return *this;
 }
 
+Console& Console::operator<<(int64_t val) {
+	char buff[32];
+	sprintf(buff, "%lld", val);
+	return operator<<(buff);
+}
+
 
 //static methods:
 
