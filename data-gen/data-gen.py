@@ -2,6 +2,7 @@ from signals import Sine, Square, Sawtooth, Triangle, WhiteNoise, EKG
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+from pathlib import Path
 
 
 def get_generators():
@@ -35,18 +36,15 @@ def generate():
     print("shuffling...")
     rng = np.random.default_rng()
     shuffled_data = rng.permutation(data_with_labels)
-    
 
     print("saving...")
-    with open("data.csv", "w", newline="") as file:
+    path = Path.cwd() / ".." / "network" / "data.csv"
+    with open(path, "w", newline="") as file:
         csv_writer = csv.writer(file)
         csv_writer.writerows(shuffled_data)
 
     print("done!")
 
-def main():
-    plot_sample()
-    # generate()
-
 if __name__ == "__main__":
-    main()
+    # plot_sample()
+    generate()

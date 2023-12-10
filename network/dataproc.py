@@ -1,4 +1,5 @@
 import numpy as np
+from pathlib import Path
 import csv
 from keras import utils, Sequential
 from matplotlib import pyplot as plt
@@ -20,7 +21,8 @@ def getMostProbableIndex(arrInd):
     return np.where(max(arrInd) == arrInd)[0][0]
 
 def read_data() -> tuple[np.ndarray, np.ndarray]:
-    with open("data.csv", "r") as file:
+    data_path = Path.cwd() / "data.csv"
+    with open(data_path, "r") as file:
         csv_reader = csv.reader(file)
 
         data_with_labels = [row for row in csv_reader]

@@ -26,7 +26,7 @@ def model_train(
     model.fit(x=train_data, y=train_labels, batch_size=8, epochs=10, verbose=1, validation_data=validation)
 
 
-def main():
+if __name__ == '__main__':
     data, labels_txt = dataproc.read_data()
 
     prepared_data = dataproc.prepare_data(data, labels_txt)
@@ -40,7 +40,3 @@ def main():
     model_train(model, prepared_data)
 
     dataproc.test_predictions(model, train_data, train_labels)
-
-
-if __name__ == '__main__':
-    main()
