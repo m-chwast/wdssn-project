@@ -7,8 +7,8 @@
 
 ## Data setup
 - Generating data:
-    1. enter _data-gen_ directory
-    2. generate the data by running _data-gen.py_ with uncommented _generate()_ function in main
+    - enter _data-gen_ directory
+    - generate the data by running _data-gen.py_ with uncommented _generate()_ function in main
 - Running IA:
-    1. enter _network_ directory
-    2. run _network.py_
+    - enter _network_ directory
+    - run _network.py_

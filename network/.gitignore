@@ -1,6 +1,9 @@
 # python
-__pycache__/
+__pycache__
 
 # data
 data.csv
 data
+
+# models
+model.h5
