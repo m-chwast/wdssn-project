@@ -4,9 +4,10 @@
 #include <vector>
 #include <string>
 #include "main.h"
+#include "module.h"
 
 
-class Console {
+class Console : public Module {
 private:
 
 	UART_HandleTypeDef& _consoleHuart;
@@ -23,8 +24,8 @@ public:
 
 	Console(UART_HandleTypeDef& consoleHuart);
 
-	void Init(void);
-	void Manage(void);
+	void Init(void) override;
+	void Manage(void) override;
 
 	//operators
 
