@@ -15,4 +15,8 @@ private:
 public:
 
 	Console(UART_HandleTypeDef& consoleHuart);
+
+	//operators
+
+	Console& operator<<(const char* msg);
 };

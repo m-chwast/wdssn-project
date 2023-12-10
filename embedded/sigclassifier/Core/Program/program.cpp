@@ -23,7 +23,7 @@ Program::Program(void)
 	: _console{Console(huart2)} {}
 
 void Program::Init(void) {
-
+	_console << "Initializing...\r\n";
 }
 
 void Program::Loop(void) {
