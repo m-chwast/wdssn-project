@@ -12,6 +12,7 @@ private:
 	UART_HandleTypeDef& _consoleHuart;
 
 	std::deque<std::string> _messages;
+	bool _messageSendComplete = true;
 
 	static std::vector<Console*> _consoles;
 
