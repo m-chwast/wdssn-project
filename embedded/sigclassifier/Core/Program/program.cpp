@@ -36,7 +36,9 @@ void Program::Init(void) {
 }
 
 void Program::Loop(void) {
-	_console.Manage();
+	for(Module* m : _modules) {
+		m->Manage();
+	}
 }
 
 
