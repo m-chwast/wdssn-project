@@ -12,6 +12,9 @@ private:
 
 	std::deque<std::string> _messages;
 
+
+	static void Console_GeneralHuartTxCpltCallback(UART_HandleTypeDef* huart);
+
 public:
 
 	Console(UART_HandleTypeDef& consoleHuart);
