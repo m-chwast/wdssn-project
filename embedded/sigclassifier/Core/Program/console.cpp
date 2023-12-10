@@ -11,7 +11,8 @@ Console::Console(UART_HandleTypeDef& consoleHuart)
 }
 
 void Console::Init(void) {
-	HAL_UART_RegisterCallback(&_consoleHuart, HAL_UART_TX_COMPLETE_CB_ID, &GeneralHuartTxCpltCallback);
+	HAL_StatusTypeDef status = HAL_UART_RegisterCallback(&_consoleHuart, HAL_UART_TX_COMPLETE_CB_ID, &GeneralHuartTxCpltCallback);
+	(*this) << "Console init " << (status == HAL_OK ? "ok" : "error") << "\r\n";
 }
 
 void Console::Manage(void) {
