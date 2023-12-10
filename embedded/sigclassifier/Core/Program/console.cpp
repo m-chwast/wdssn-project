@@ -1,3 +1,4 @@
+#include <cstring>
 #include "console.h"
 
 
@@ -13,6 +14,7 @@ Console::Console(UART_HandleTypeDef& consoleHuart)
 void Console::Init(void) {
 	HAL_StatusTypeDef status = HAL_UART_RegisterCallback(&_consoleHuart, HAL_UART_TX_COMPLETE_CB_ID, &GeneralHuartTxCpltCallback);
 	(*this) << "Console init " << (status == HAL_OK ? "ok" : "error") << "\r\n";
+	_nonBlockingMode = true;
 }
 
 void Console::Manage(void) {
@@ -45,7 +47,12 @@ void Console::HuartTxCpltCallback(void) {
 
 
 Console& Console::operator<<(const char* msg) {
-	_messages.push_back(std::string(msg));
+	if(_nonBlockingMode == true) {
+		_messages.push_back(std::string(msg));
+	}
+	else {
+		HAL_UART_Transmit(&_consoleHuart, reinterpret_cast<const uint8_t*>(msg), strlen(msg), HAL_MAX_DELAY);
+	}
 	return *this;
 }
 

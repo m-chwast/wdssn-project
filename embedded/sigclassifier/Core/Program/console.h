@@ -12,6 +12,8 @@ private:
 
 	UART_HandleTypeDef& _consoleHuart;
 
+	bool _nonBlockingMode = false;	//until initialized, send messages in blocking mode
+
 	std::deque<std::string> _messages;
 	bool _messageSendComplete = true;
 
