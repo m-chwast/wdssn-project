@@ -23,6 +23,7 @@ Program::Program(void)
 	: _console{Console(huart2)} {}
 
 void Program::Init(void) {
+	_console.Init();
 	_console << "Initializing...\r\n";
 
 	_console << "Initialized\r\n";

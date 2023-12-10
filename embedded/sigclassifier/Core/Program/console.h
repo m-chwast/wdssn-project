@@ -23,6 +23,7 @@ public:
 
 	Console(UART_HandleTypeDef& consoleHuart);
 
+	void Init(void);
 	void Manage(void);
 
 	//operators

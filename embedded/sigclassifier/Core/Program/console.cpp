@@ -8,6 +8,9 @@ Console::Console(UART_HandleTypeDef& consoleHuart)
 	: _consoleHuart{consoleHuart} {
 
 	_consoles.push_back(this);
+}
+
+void Console::Init(void) {
 	HAL_UART_RegisterCallback(&_consoleHuart, HAL_UART_TX_COMPLETE_CB_ID, &GeneralHuartTxCpltCallback);
 }
 
