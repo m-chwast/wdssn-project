@@ -22,12 +22,12 @@ def create_model() -> Sequential:
 def model_train(
         model : Sequential, 
         data : ((np.ndarray, np.ndarray), (np.ndarray, np.ndarray)),
-        epochs = 10):
+        epochs = 12):
     train_data, train_labels = np.array(data[0][0]), np.array(data[0][1])
     valid_data, valid_labels = np.array(data[1][0]), np.array(data[1][1])
     
     validation=(valid_data, valid_labels)
-    model.fit(x=train_data, y=train_labels, batch_size=16, epochs=epochs, verbose=1, validation_data=validation)
+    model.fit(x=train_data, y=train_labels, batch_size=8, epochs=epochs, verbose=1, validation_data=validation)
 
 def create_model_quant_aware(model : Sequential) -> Sequential:
     quant_model = tfmot.quantization.keras.quantize_model(model)
@@ -59,6 +59,9 @@ def compare_model_sizes(original_model, quantized_tflite_model):
     print("Float model in kb:", os.path.getsize(float_file) / float(2**10))
     print("Quantized model in kb:", os.path.getsize(quant_file) / float(2**10))
 
+def save_tflite_model(model_tflite_quantized, model_name = "model"):
+    with open(model_name + ".tflite", "wb") as f:
+        f.write(model_tflite_quantized)
 
 def evaluate_one(interpreter, test_data):
     input_index = interpreter.get_input_details()[0]["index"]
@@ -111,6 +114,7 @@ def test_quantized_model(tflite_model, test_data, test_labels):
     print('Quant TFLite test_accuracy:', test_accuracy)
     dataproc.show_confusion_matrix(actual=correct, predicted=predicted)
 
+
 def main():
     data, labels_txt = dataproc.read_data()
     prepared_data = dataproc.prepare_data(data, labels_txt)
@@ -122,15 +126,15 @@ def main():
 
     model_quant_aware = create_model_quant_aware(model)
     # train model with quantization-aware training
-    model_train(model_quant_aware, prepared_data, epochs=2)
+    model_train(model_quant_aware, prepared_data, epochs=3)
 
     model_tflite_quantized = get_quantized_model(model_quant_aware)
 
-    train_data, train_labels = prepared_data[0][0], prepared_data[0][1]
-    # dataproc.test_predictions(model, train_data, train_labels, 10000)
-    
     compare_model_sizes(original_model=model, quantized_tflite_model=model_tflite_quantized)
+    save_tflite_model(model_tflite_quantized)
 
+    train_data, train_labels = prepared_data[0][0], prepared_data[0][1]
     test_quantized_model(model_tflite_quantized, train_data, train_labels)
+
 
 main()
