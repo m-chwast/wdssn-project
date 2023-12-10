@@ -12,21 +12,31 @@ public:
 
 	Program(void);
 
+	//to be used by code called from C
+	void Init(void);
+	void Loop(void);
+
 } program;
 
+
 Program::Program(void)
-	: _console{Console(huart2)} {
+	: _console{Console(huart2)} {}
+
+void Program::Init(void) {
 
 }
 
+void Program::Loop(void) {
+
+}
 
 
 // functions to be called from C main
 
 void Program_Init(void) {
-
+	program.Init();
 }
 
 void Program_Loop(void) {
-
+	program.Loop();
 }
