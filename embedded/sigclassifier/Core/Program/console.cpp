@@ -1,9 +1,12 @@
 #include "console.h"
 
 
+static void Console_HuartTxCpltCallback(UART_HandleTypeDef* huart);
+
+
 Console::Console(UART_HandleTypeDef& consoleHuart)
 	: _consoleHuart{consoleHuart} {
-
+		HAL_UART_RegisterCallback(&consoleHuart, HAL_UART_TX_COMPLETE_CB_ID, &Console_HuartTxCpltCallback);
 }
 
 void Console::Manage(void) {
@@ -22,4 +25,8 @@ void Console::Manage(void) {
 Console& Console::operator<<(const char* msg) {
 	_messages.push_back(std::string(msg));
 	return *this;
+}
+
+static void Console_HuartTxCpltCallback(UART_HandleTypeDef* huart) {
+
 }
