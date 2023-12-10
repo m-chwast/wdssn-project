@@ -6,6 +6,8 @@
 class Program {
 private:
 
+	std::vector<Module*> _modules;
+
 	Console _console;
 
 public:
@@ -20,12 +22,16 @@ public:
 
 
 Program::Program(void)
-	: _console{Console(huart2)} {}
+	: _console{Console(huart2)} {
+
+	_modules.push_back(&_console);
+}
 
 void Program::Init(void) {
-	_console.Init();
 	_console << "Initializing...\r\n";
-
+	for(Module* m : _modules) {
+		m->Init();
+	}
 	_console << "Initialized\r\n";
 }
 
