@@ -1,10 +1,14 @@
 #include "console.h"
 
 
+std::vector<Console*> Console::_consoles;
+
+
 Console::Console(UART_HandleTypeDef& consoleHuart)
 	: _consoleHuart{consoleHuart} {
 
-	HAL_UART_RegisterCallback(&consoleHuart, HAL_UART_TX_COMPLETE_CB_ID, &Console_GeneralHuartTxCpltCallback);
+	_consoles.push_back(this);
+	HAL_UART_RegisterCallback(&consoleHuart, HAL_UART_TX_COMPLETE_CB_ID, &GeneralHuartTxCpltCallback);
 }
 
 void Console::Manage(void) {
@@ -19,6 +23,10 @@ void Console::Manage(void) {
 	_messages.pop_front();
 }
 
+void Console::HuartTxCpltCallback(void) {
+
+}
+
 
 Console& Console::operator<<(const char* msg) {
 	_messages.push_back(std::string(msg));
@@ -28,6 +36,11 @@ Console& Console::operator<<(const char* msg) {
 
 //static methods:
 
-void Console::Console_GeneralHuartTxCpltCallback(UART_HandleTypeDef* huart) {
-
+void Console::GeneralHuartTxCpltCallback(UART_HandleTypeDef* huart) {
+	for(Console* c : _consoles) {
+		if(&c->_consoleHuart == huart) {
+			c->HuartTxCpltCallback();
+			break;
+		}
+	}
 }

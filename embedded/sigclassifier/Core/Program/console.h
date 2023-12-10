@@ -1,6 +1,7 @@
 #pragma once
 
 #include <deque>
+#include <vector>
 #include <string>
 #include "main.h"
 
@@ -12,8 +13,10 @@ private:
 
 	std::deque<std::string> _messages;
 
+	static std::vector<Console*> _consoles;
 
-	static void Console_GeneralHuartTxCpltCallback(UART_HandleTypeDef* huart);
+	static void GeneralHuartTxCpltCallback(UART_HandleTypeDef* huart);
+	void HuartTxCpltCallback(void);
 
 public:
 
