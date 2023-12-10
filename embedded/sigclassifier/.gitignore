@@ -1,0 +1,5 @@
+/Debug/
+/Drivers/
+sigclassifier\ Debug.launch
+STM32L152RETX_FLASH.ld
+STM32L152RETX_RAM.ld
