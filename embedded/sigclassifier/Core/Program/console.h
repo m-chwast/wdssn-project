@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <deque>
 #include <string>
 #include "main.h"
 
@@ -10,7 +10,7 @@ private:
 
 	UART_HandleTypeDef& _consoleHuart;
 
-	std::vector<std::string> _messages;
+	std::deque<std::string> _messages;
 
 public:
 

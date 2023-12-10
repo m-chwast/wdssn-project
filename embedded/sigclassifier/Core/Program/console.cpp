@@ -15,7 +15,7 @@ void Console::Manage(void) {
 	const uint8_t* data = reinterpret_cast<const uint8_t*>(msg.c_str());
 	HAL_UART_Transmit(&_consoleHuart, data, msg.size(), HAL_MAX_DELAY);
 
-	_messages.erase(_messages.begin());
+	_messages.pop_front();
 }
 
 
