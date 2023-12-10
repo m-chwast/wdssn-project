@@ -24,10 +24,12 @@ Program::Program(void)
 
 void Program::Init(void) {
 	_console << "Initializing...\r\n";
+
+	_console << "Initialized\r\n";
 }
 
 void Program::Loop(void) {
-
+	_console.Manage();
 }
 
 

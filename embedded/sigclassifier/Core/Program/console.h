@@ -16,6 +16,8 @@ public:
 
 	Console(UART_HandleTypeDef& consoleHuart);
 
+	void Manage(void);
+
 	//operators
 
 	Console& operator<<(const char* msg);
