@@ -1,5 +1,6 @@
 #include "program.h"
 #include "usart.h"
+#include "tim.h"
 #include "console.h"
 #include "acquisition.h"
 
@@ -25,7 +26,7 @@ public:
 
 Program::Program(void)
 	: _console{Console(huart2)},
-	  _acquisition{Acquisition(_console)} {
+	  _acquisition{Acquisition(_console, htim6)} {
 
     _modules.push_back(&_acquisition);
 	//console has to be pushed back last to allow for blocking sending during modules init
