@@ -3,11 +3,20 @@
 
 void Acquisition::Init(void) {
 	SetSamplingFreq(_initSamplingFreq);
+	Start();
 	_console << "Acquisition init ok\r\n";
 }
 
 void Acquisition::Start(void) {
-	HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), _sampleNo);
+	HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), _sampleNo);
+	HAL_StatusTypeDef timStatus = HAL_TIM_Base_Start(&_samplingHtim);
+
+	if(adcStatus != HAL_OK || timStatus != HAL_OK) {
+		_console << "Acquisition error: not started\r\n";
+	}
+	else {
+		_console << "Acquisition started\r\n";
+	}
 }
 
 uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
@@ -31,7 +40,7 @@ uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
 	}
 
 	uint16_t timPulses = timFreq / freqHz;
-	tim->CNT = timPulses;
+	tim->ARR = timPulses;
 
 	uint32_t freqObtained = timFreq / timPulses;
 
