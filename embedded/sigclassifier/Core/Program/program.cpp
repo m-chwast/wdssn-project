@@ -28,11 +28,13 @@ Program::Program(void)
 }
 
 void Program::Init(void) {
+	uint32_t timeStart = HAL_GetTick();
 	_console << "Initializing...\r\n";
 	for(Module* m : _modules) {
 		m->Init();
 	}
-	_console << "Initialized\r\n";
+	uint32_t timeElapsed = HAL_GetTick() - timeStart;
+	_console << "Initialized in " << timeElapsed << " ms\r\n";
 }
 
 void Program::Loop(void) {

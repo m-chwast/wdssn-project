@@ -32,5 +32,5 @@ public:
 	//operators
 
 	Console& operator<<(const char* msg);
-	Console& operator<<(int64_t val);
+	Console& operator<<(int32_t val);
 };
