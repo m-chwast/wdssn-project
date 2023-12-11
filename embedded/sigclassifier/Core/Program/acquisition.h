@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <vector>
 #include "main.h"
 #include "module.h"
 #include "console.h"
@@ -18,15 +19,14 @@ private:
 
 	std::array<uint8_t, _sampleNo> _samples;
 
+	static std::vector<Acquisition*> _acquisitions;
+
 	static void GeneralADCConvCpltCb(ADC_HandleTypeDef* hdma);
-	void DmaTxCpltCb(void);
+	void ADCConvCpltCb(void);
 
 public:
 
-	Acquisition(Console& console, TIM_HandleTypeDef& samplingHtim, ADC_HandleTypeDef& hadc)
-		: _console{console},
-		  _samplingHtim{samplingHtim},
-		  _hadc{hadc} {}
+	Acquisition(Console& console, TIM_HandleTypeDef& samplingHtim, ADC_HandleTypeDef& hadc);
 
 	void Init(void) override;
 	void Manage(void) override {};

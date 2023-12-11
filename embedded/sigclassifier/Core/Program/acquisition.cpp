@@ -1,6 +1,17 @@
 #include "acquisition.h"
 
 
+std::vector<Acquisition*> Acquisition::_acquisitions;
+
+
+Acquisition::Acquisition(Console& console, TIM_HandleTypeDef& samplingHtim, ADC_HandleTypeDef& hadc)
+	: _console{console},
+	  _samplingHtim{samplingHtim},
+	  _hadc{hadc} {
+
+	_acquisitions.push_back(this);
+}
+
 void Acquisition::Init(void) {
 	SetSamplingFreq(_initSamplingFreq);
 
@@ -54,11 +65,17 @@ uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
 	return freqObtained;
 }
 
-void Acquisition::DmaTxCpltCb(void) {
-
+void Acquisition::ADCConvCpltCb(void) {
+	HAL_ADC_Stop_DMA(&_hadc);
+	HAL_TIM_Base_Stop(&_samplingHtim);
 }
 
 void Acquisition::GeneralADCConvCpltCb(ADC_HandleTypeDef* hadc) {
-
+	for(Acquisition* a : _acquisitions) {
+		if(&a->_hadc == hadc) {
+			a->ADCConvCpltCb();
+			return;
+		}
+	}
 }
 
