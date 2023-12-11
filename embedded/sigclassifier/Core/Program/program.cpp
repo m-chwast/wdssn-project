@@ -1,6 +1,7 @@
 #include "program.h"
 #include "usart.h"
 #include "console.h"
+#include "acquisition.h"
 
 
 class Program {
@@ -9,6 +10,7 @@ private:
 	std::vector<Module*> _modules;
 
 	Console _console;
+	Acquisition _acquisition;
 
 public:
 
@@ -22,8 +24,11 @@ public:
 
 
 Program::Program(void)
-	: _console{Console(huart2)} {
+	: _console{Console(huart2)},
+	  _acquisition{Acquisition(_console)} {
 
+    _modules.push_back(&_acquisition);
+	//console has to be pushed back last to allow for blocking sending during modules init
 	_modules.push_back(&_console);
 }
 
