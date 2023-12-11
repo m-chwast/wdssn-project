@@ -17,21 +17,40 @@ void Acquisition::Init(void) {
 
 	HAL_ADC_RegisterCallback(&_hadc, HAL_ADC_CONVERSION_COMPLETE_CB_ID, &GeneralADCConvCpltCb);
 
-
-	Start();
 	_console << "Acquisition init ok\r\n";
 }
 
-void Acquisition::Start(void) {
-	HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), _sampleNo);
-	HAL_StatusTypeDef timStatus = HAL_TIM_Base_Start(&_samplingHtim);
+void Acquisition::Manage(void) {
+	if(HAL_GetTick() - _lastManageRunTime < _managePeriodMs) {
+		return;
+	}
 
-	if(adcStatus != HAL_OK || timStatus != HAL_OK) {
+	_lastManageRunTime = HAL_GetTick();
+
+	if(IsAcquisitionInProgress()) {
+		return;
+	}
+
+	bool startOk = Start();
+
+	if(startOk == false) {
 		_console << "Acquisition error: not started\r\n";
 	}
 	else {
 		_console << "Acquisition started\r\n";
 	}
+}
+
+bool Acquisition::Start(void) {
+	HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), _sampleNo);
+	HAL_StatusTypeDef timStatus = HAL_TIM_Base_Start(&_samplingHtim);
+
+	if(adcStatus != HAL_OK || timStatus != HAL_OK) {
+		return false;
+	}
+
+	_acqInProgress = true;
+	return true;
 }
 
 uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
@@ -68,6 +87,7 @@ uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
 void Acquisition::ADCConvCpltCb(void) {
 	HAL_ADC_Stop_DMA(&_hadc);
 	HAL_TIM_Base_Stop(&_samplingHtim);
+	_acqInProgress = false;
 }
 
 void Acquisition::GeneralADCConvCpltCb(ADC_HandleTypeDef* hadc) {

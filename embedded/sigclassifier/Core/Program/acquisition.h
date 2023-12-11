@@ -10,6 +10,9 @@
 class Acquisition : public Module {
 private:
 
+	constexpr static uint32_t _managePeriodMs = 150;
+	uint32_t _lastManageRunTime;
+
 	constexpr static uint32_t _initSamplingFreq = 100000;
 	constexpr static uint32_t _sampleNo = 100;
 
@@ -18,6 +21,8 @@ private:
 	ADC_HandleTypeDef& _hadc;
 
 	std::array<uint8_t, _sampleNo> _samples;
+	volatile bool _acqInProgress;
+
 
 	static std::vector<Acquisition*> _acquisitions;
 
@@ -29,9 +34,10 @@ public:
 	Acquisition(Console& console, TIM_HandleTypeDef& samplingHtim, ADC_HandleTypeDef& hadc);
 
 	void Init(void) override;
-	void Manage(void) override {};
+	void Manage(void) override;
 
-	void Start(void);
+	bool Start(void);
+	bool IsAcquisitionInProgress(void) { return _acqInProgress; }
 
 	uint32_t SetSamplingFreq(uint32_t freqHz);
 };

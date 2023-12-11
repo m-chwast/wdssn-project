@@ -15,7 +15,7 @@ private:
 	bool _nonBlockingMode = false;	//until initialized, send messages in blocking mode
 
 	std::deque<std::string> _messages;
-	bool _messageSendComplete = true;
+	volatile bool _messageSendComplete = true;
 
 	static std::vector<Console*> _consoles;
 
