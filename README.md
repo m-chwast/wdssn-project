@@ -12,3 +12,6 @@
 - Running IA:
     - enter _network_ directory
     - run _network.py_
+
+### Creating your own Pattern
+If you have an idea to expande model with new, more deficult signals, all you have to do is to create a new class that will inherits from `SignalBase` and override `get_sample(self, arg: float) -> float` method.
