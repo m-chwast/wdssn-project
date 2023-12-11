@@ -6,6 +6,10 @@ void Acquisition::Init(void) {
 	_console << "Acquisition init ok\r\n";
 }
 
+void Acquisition::Start(void) {
+	HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), _sampleNo);
+}
+
 uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
 	TIM_TypeDef* tim = _samplingHtim.Instance;
 
