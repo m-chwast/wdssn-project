@@ -3,6 +3,10 @@
 
 void Acquisition::Init(void) {
 	SetSamplingFreq(_initSamplingFreq);
+
+	HAL_ADC_RegisterCallback(&_hadc, HAL_ADC_CONVERSION_COMPLETE_CB_ID, &GeneralADCConvCpltCb);
+
+
 	Start();
 	_console << "Acquisition init ok\r\n";
 }
@@ -49,3 +53,12 @@ uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
 
 	return freqObtained;
 }
+
+void Acquisition::DmaTxCpltCb(void) {
+
+}
+
+void Acquisition::GeneralADCConvCpltCb(ADC_HandleTypeDef* hadc) {
+
+}
+

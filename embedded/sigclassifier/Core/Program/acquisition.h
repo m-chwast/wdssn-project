@@ -18,6 +18,9 @@ private:
 
 	std::array<uint8_t, _sampleNo> _samples;
 
+	static void GeneralADCConvCpltCb(ADC_HandleTypeDef* hdma);
+	void DmaTxCpltCb(void);
+
 public:
 
 	Acquisition(Console& console, TIM_HandleTypeDef& samplingHtim, ADC_HandleTypeDef& hadc)
