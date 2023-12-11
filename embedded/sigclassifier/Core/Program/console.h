@@ -16,6 +16,7 @@ private:
 
 	std::deque<std::string> _messages;
 	volatile bool _messageSendComplete = true;
+	volatile bool _popPreviousMessage = false;
 
 	static std::vector<Console*> _consoles;
 

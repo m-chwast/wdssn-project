@@ -22,6 +22,14 @@ void Console::Manage(void) {
 		return;
 	}
 
+	if(_popPreviousMessage == true) {
+		_messages.pop_front();
+		_popPreviousMessage = false;
+		if(_messages.size() == 0) {
+			return;
+		}
+	}
+
 	if(_messageSendComplete == false) {
 		return;
 	}
@@ -37,12 +45,11 @@ void Console::Manage(void) {
 		_messageSendComplete = true;
 		return;
 	}
-
-	_messages.pop_front();
 }
 
 void Console::HuartTxCpltCallback(void) {
 	_messageSendComplete = true;
+	_popPreviousMessage = true;
 }
 
 
