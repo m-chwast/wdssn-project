@@ -12,12 +12,14 @@ private:
 
 	Console& _console;
 	TIM_HandleTypeDef& _samplingHtim;
+	ADC_HandleTypeDef& _hadc;
 
 public:
 
-	Acquisition(Console& console, TIM_HandleTypeDef& samplingHtim)
+	Acquisition(Console& console, TIM_HandleTypeDef& samplingHtim, ADC_HandleTypeDef& hadc)
 		: _console{console},
-		  _samplingHtim{samplingHtim} {}
+		  _samplingHtim{samplingHtim},
+		  _hadc{hadc} {}
 
 	void Init(void) override;
 	void Manage(void) override {};
