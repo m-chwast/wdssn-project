@@ -1,4 +1,5 @@
 #include "network_runner.h"
+#include "tflite_model.h"
 
 
 NetworkRunner::NetworkRunner(Console& console)
