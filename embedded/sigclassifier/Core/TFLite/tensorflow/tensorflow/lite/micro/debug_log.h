@@ -20,13 +20,13 @@ limitations under the License.
 // tensorflow/lite/micro/debug_log.cc.
 
 #ifdef __cplusplus
- extern "C" {
+// extern "C" {
 #endif
 
 void DebugLog(const char* s);
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 #endif  // TENSORFLOW_LITE_MICRO_DEBUG_LOG_H_

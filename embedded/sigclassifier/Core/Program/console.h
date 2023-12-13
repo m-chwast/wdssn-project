@@ -34,4 +34,9 @@ public:
 
 	Console& operator<<(const char* msg);
 	Console& operator<<(int32_t val);
+
+	friend void DebugLog(const char * s);
 };
+
+
+void DebugLog(const char* s);
