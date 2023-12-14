@@ -19,15 +19,13 @@ private:
 
 	const tflite::Model* _model = nullptr;
 
-	tflite::ops::micro::AllOpsResolver* const _resolver = new tflite::ops::micro::AllOpsResolver();
-	tflite::MicroInterpreter* _interpreter = new tflite::MicroInterpreter(
-			_model, *_resolver, _tensorArena, _kTensorArenaSize, _errorReporter);
-
+	tflite::ops::micro::AllOpsResolver* _resolver = nullptr;
+	tflite::MicroInterpreter* _interpreter = nullptr;
 
 	TfLiteTensor* _modelInput = nullptr;
 	TfLiteTensor* _modelOutput = nullptr;
 
-	constexpr static uint32_t _kTensorArenaSize = 2 * 1024;
+	constexpr static uint32_t _kTensorArenaSize = 4 * 1024;
 	uint8_t _tensorArena[_kTensorArenaSize];
 
 public:
