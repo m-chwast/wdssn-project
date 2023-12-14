@@ -44,7 +44,8 @@ class MicroOpResolver : public OpResolver {
       if ((registration.builtin_code == op) &&
           (registration.version == MicroOpResolverAnyVersion() ||
            version == MicroOpResolverAnyVersion() ||
-           registration.version == version)) {
+           registration.version == version ||
+		   op == BuiltinOperator_TANH)) {
         return &registration;
       }
     }
