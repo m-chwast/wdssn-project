@@ -33,7 +33,7 @@ void NetworkRunner::Init(void) {
 
 	float inData[100];
 	for(int i = 0; i < 100; i++) {
-		inData[i] = i > 50 ? 1 : 0;
+		inData[i] = i > 25 ? 1 : 0;
 	}
 
 	for(int i = 0; i < 100; i++) {
@@ -48,8 +48,14 @@ void NetworkRunner::Init(void) {
 
 	float outData[6];
 	for(int i = 0; i < 6; i++) {
-		outData[i] = _modelOutput->data.f[0];
+		outData[i] = _modelOutput->data.f[i];
 	}
+
+	_console << "Result: ";
+	for(int i = 0; i < 6; i++) {
+		_console << (int)(outData[i] * 1000) << ", ";
+	}
+	_console << "\r\n";
 
 	_console << "Network Runner init ok\r\n";
 }
