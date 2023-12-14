@@ -16,8 +16,14 @@ private:
 	Console& _console;
 
 	tflite::ErrorReporter* const _errorReporter = new tflite::MicroErrorReporter();
+
 	const tflite::Model* _model = nullptr;
-	tflite::MicroInterpreter* _interpreter = nullptr;
+
+	tflite::ops::micro::AllOpsResolver* const _resolver = new tflite::ops::micro::AllOpsResolver();
+	tflite::MicroInterpreter* _interpreter = new tflite::MicroInterpreter(
+			_model, *_resolver, _tensorArena, _kTensorArenaSize, _errorReporter);
+
+
 	TfLiteTensor* _modelInput = nullptr;
 	TfLiteTensor* _modelOutput = nullptr;
 
@@ -33,5 +39,7 @@ public:
 
 	~NetworkRunner() {
 		delete _errorReporter;
+		delete _resolver;
+		delete _interpreter;
 	}
 };
