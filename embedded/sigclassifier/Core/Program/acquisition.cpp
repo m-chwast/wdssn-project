@@ -17,6 +17,8 @@ void Acquisition::Init(void) {
 
 	HAL_ADC_RegisterCallback(&_hadc, HAL_ADC_CONVERSION_COMPLETE_CB_ID, &GeneralADCConvCpltCb);
 
+	Start();
+
 	_console << "Acquisition init ok\r\n";
 }
 
@@ -31,7 +33,17 @@ void Acquisition::Manage(void) {
 		return;
 	}
 
-	ProcessSamples();
+	if(_samplesReady == false) {
+		ProcessSamples();
+		_samplesReady = true;
+		_canStartAcq = false;
+	}
+
+	if(_canStartAcq == false) {
+		return;
+	}
+
+	_samplesReady = false;
 
 	bool startOk = Start();
 
@@ -44,7 +56,7 @@ void Acquisition::Manage(void) {
 }
 
 bool Acquisition::Start(void) {
-	HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), _sampleNo);
+	HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), sampleNo);
 	HAL_StatusTypeDef timStatus = HAL_TIM_Base_Start(&_samplingHtim);
 
 	if(adcStatus != HAL_OK || timStatus != HAL_OK) {
@@ -93,7 +105,7 @@ void Acquisition::ProcessSamples(void) {
 	}
 
 	uint16_t minIndex = 0, maxIndex = 0;
-	for(uint16_t i = 0; i < _sampleNo; i++) {
+	for(uint16_t i = 0; i < sampleNo; i++) {
 		if(_samples[i] < _samples[minIndex]) {
 			minIndex = i;
 		}
