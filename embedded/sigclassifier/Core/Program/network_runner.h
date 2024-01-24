@@ -27,6 +27,10 @@ private:
 	constexpr static uint32_t _kTensorArenaSize = 4 * 1024;
 	uint8_t _tensorArena[_kTensorArenaSize] __attribute__ ((aligned (16)));
 
+	constexpr static size_t _networkInputSize = 100;
+	static_assert(_networkInputSize == Acquisition::sampleNo);
+
+
 	std::string FloatToPercent(float f);
 
 	void RunNetwork(const Acquisition::Samples& samples);

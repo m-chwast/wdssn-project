@@ -75,7 +75,38 @@ void NetworkRunner::Manage(void) {
 }
 
 void NetworkRunner::RunNetwork(const Acquisition::Samples& samples) {
+	TfLiteTensor* _modelInput = _interpreter->input(0);
+	TfLiteTensor* _modelOutput = _interpreter->output(0);
 
+	float inData[_networkInputSize];
+	for(size_t i = 0; i < _networkInputSize; i++) {
+		inData[i] = samples[i] / 255.0;
+	}
+
+	for(size_t i = 0; i < _networkInputSize; i++) {
+		_modelInput->data.f[i] = inData[i];
+	}
+
+	TfLiteStatus invokeStatus = _interpreter->Invoke();
+	if(invokeStatus != kTfLiteOk) {
+		TF_LITE_REPORT_ERROR(_errorReporter, "Invoke failed\r\n");
+		return;
+	}
+
+	float outData[6];
+	for(size_t i = 0; i < 6; i++) {
+		outData[i] = _modelOutput->data.f[i];
+	}
+
+	std::string outStr = "Result: ";
+
+	constexpr uint8_t outClasses = 6;
+	for(int i = 0; i < outClasses; i++) {
+		float result = outData[i];
+		outStr += FloatToPercent(result) + (i == outClasses - 1 ? "\r\n" : ", ");
+	}
+
+	_console << outStr.c_str();
 }
 
 std::string NetworkRunner::FloatToPercent(float f) {
