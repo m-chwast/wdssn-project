@@ -28,8 +28,8 @@ void NetworkRunner::Init(void) {
 	    return;
 	}
 
-	_modelInput = _interpreter->input(0);
-	_modelOutput = _interpreter->output(0);
+	TfLiteTensor* _modelInput = _interpreter->input(0);
+	TfLiteTensor* _modelOutput = _interpreter->output(0);
 
 	float inData[100];
 	for(int i = 0; i < 100; i++) {

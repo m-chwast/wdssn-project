@@ -22,9 +22,6 @@ private:
 	tflite::ops::micro::AllOpsResolver* _resolver = nullptr;
 	tflite::MicroInterpreter* _interpreter = nullptr;
 
-	TfLiteTensor* _modelInput = nullptr;
-	TfLiteTensor* _modelOutput = nullptr;
-
 	constexpr static uint32_t _kTensorArenaSize = 4 * 1024;
 	uint8_t _tensorArena[_kTensorArenaSize] __attribute__ ((aligned (16)));
 
