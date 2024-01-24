@@ -31,6 +31,8 @@ void Acquisition::Manage(void) {
 		return;
 	}
 
+	ProcessSamples();
+
 	bool startOk = Start();
 
 	if(startOk == false) {
@@ -82,6 +84,36 @@ uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
 	_console << " Hz, obtained " << freqObtained << " Hz\r\n";
 
 	return freqObtained;
+}
+
+
+void Acquisition::ProcessSamples(void) {
+	if(IsAcquisitionInProgress()) {
+		return;
+	}
+
+	uint16_t minIndex = 0, maxIndex = 0;
+	for(uint16_t i = 0; i < _sampleNo; i++) {
+		if(_samples[i] < _samples[minIndex]) {
+			minIndex = i;
+		}
+		if(_samples[i] > _samples[maxIndex]) {
+			maxIndex = i;
+		}
+	}
+
+	uint8_t minVal = _samples[minIndex];
+	uint8_t maxVal = _samples[maxIndex];
+	uint8_t range = maxVal - minVal;
+
+	if(range == 0) {
+		return;
+	}
+
+	for(uint8_t& sample : _samples) {
+		sample -= minVal;
+		sample = (uint32_t)sample * 255 / range;
+	}
 }
 
 void Acquisition::ADCConvCpltCb(void) {

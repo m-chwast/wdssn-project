@@ -26,6 +26,8 @@ private:
 
 	static std::vector<Acquisition*> _acquisitions;
 
+	void ProcessSamples(void);
+
 	static void GeneralADCConvCpltCb(ADC_HandleTypeDef* hdma);
 	void ADCConvCpltCb(void);
 
