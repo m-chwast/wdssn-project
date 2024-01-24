@@ -42,8 +42,8 @@ public:
 	void Manage(void) override;
 
 	bool Start(void);
-	bool IsAcquisitionInProgress(void) { return _acqInProgress; }
-	bool AreSamplesReady(void) { return _samplesReady; }
+	bool IsAcquisitionInProgress(void) const { return _acqInProgress; }
+	bool AreSamplesReady(void) const { return _samplesReady; }
 	const std::array<uint8_t, sampleNo> GetSamples(void) { _canStartAcq = true; return _samples; }
 
 	uint32_t SetSamplingFreq(uint32_t freqHz);
