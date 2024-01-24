@@ -30,7 +30,7 @@ public:
 Program::Program(void)
 	: _console{Console(huart2)},
 	  _acquisition{Acquisition(_console, htim6, hadc)},
-	  _networkRunner{_console} {
+	  _networkRunner{_console, _acquisition} {
 
     _modules.push_back(&_acquisition);
     _modules.push_back(&_networkRunner);

@@ -2,8 +2,8 @@
 #include "tflite_model.h"
 
 
-NetworkRunner::NetworkRunner(Console& console)
-	: _console{console} {
+NetworkRunner::NetworkRunner(Console& console, Acquisition& acquisition)
+	: _console{console}, _acquisition{acquisition} {
 
 }
 

@@ -2,6 +2,7 @@
 
 #include "module.h"
 #include "console.h"
+#include "acquisition.h"
 
 #include "tensorflow/lite/micro/kernels/all_ops_resolver.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
@@ -14,6 +15,7 @@ class NetworkRunner : public Module {
 private:
 
 	Console& _console;
+	Acquisition& _acquisition;
 
 	tflite::ErrorReporter* const _errorReporter = new tflite::MicroErrorReporter();
 
@@ -29,7 +31,7 @@ private:
 
 public:
 
-	NetworkRunner(Console& console);
+	NetworkRunner(Console& console, Acquisition& acquisition);
 
 	virtual void Init(void) override;
 	virtual void Manage(void) override;
