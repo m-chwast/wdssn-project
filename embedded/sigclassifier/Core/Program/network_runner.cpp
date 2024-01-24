@@ -52,15 +52,35 @@ void NetworkRunner::Init(void) {
 	}
 
 	_console << "Result: ";
+
+	std::string percent = "";
+
 	for(int i = 0; i < 6; i++) {
-		_console << (int)(outData[i] * 1000) << ", ";
+		float result = outData[i];
+		percent += FloatToPercent(result) + ", ";
 	}
-	_console << "\r\n";
+
+	_console << percent.c_str() << "\r\n";
 
 	_console << "Network Runner init ok\r\n";
 }
 
 void NetworkRunner::Manage(void) {
 
+}
+
+std::string NetworkRunner::FloatToPercent(float f) {
+	std::string str;
+	uint32_t i = f * 1000;
+
+	uint32_t percent = i / 10;
+	uint8_t decimal = i % 10;
+
+	str += std::to_string(percent);
+	str += '.';
+	str += std::to_string(decimal);
+	str += '%';
+
+	return str;
 }
 
