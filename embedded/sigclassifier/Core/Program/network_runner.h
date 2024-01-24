@@ -29,6 +29,8 @@ private:
 
 	std::string FloatToPercent(float f);
 
+	void RunNetwork(const Acquisition::Samples& samples);
+
 public:
 
 	NetworkRunner(Console& console, Acquisition& acquisition);

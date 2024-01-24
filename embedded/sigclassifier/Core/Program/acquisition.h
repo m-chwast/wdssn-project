@@ -11,6 +11,8 @@ class Acquisition : public Module {
 public:
 	constexpr static uint32_t sampleNo = 100;
 
+	typedef std::array<uint8_t, sampleNo> Samples;
+
 private:
 
 	constexpr static uint32_t _managePeriodMs = 150;
@@ -22,7 +24,7 @@ private:
 	TIM_HandleTypeDef& _samplingHtim;
 	ADC_HandleTypeDef& _hadc;
 
-	std::array<uint8_t, sampleNo> _samples;
+	Samples _samples;
 	volatile bool _acqInProgress;
 	bool _samplesReady = false;
 	bool _canStartAcq = false;
@@ -44,7 +46,7 @@ public:
 	bool Start(void);
 	bool IsAcquisitionInProgress(void) const { return _acqInProgress; }
 	bool AreSamplesReady(void) const { return _samplesReady; }
-	const std::array<uint8_t, sampleNo> GetSamples(void) { _canStartAcq = true; return _samples; }
+	const Samples GetSamples(void) { _canStartAcq = true; return _samples; }
 
 	uint32_t SetSamplingFreq(uint32_t freqHz);
 };

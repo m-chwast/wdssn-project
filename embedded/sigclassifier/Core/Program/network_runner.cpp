@@ -66,6 +66,15 @@ void NetworkRunner::Init(void) {
 }
 
 void NetworkRunner::Manage(void) {
+	if(_acquisition.AreSamplesReady() == false) {
+		return;
+	}
+
+	std::array<uint8_t, _acquisition.sampleNo> samples = _acquisition.GetSamples();
+	RunNetwork(samples);
+}
+
+void NetworkRunner::RunNetwork(const Acquisition::Samples& samples) {
 
 }
 
