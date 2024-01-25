@@ -34,8 +34,8 @@ private:
 
 	typedef std::array<float, _netOutputClassesCnt> Output;
 
-	void PrintOutput(const Output& out);
-	std::string FloatToPercent(float f);
+	void PrintOutput(const Output& out) const;
+	std::string FloatToPercent(float f) const;
 
 	void RunNetwork(const Acquisition::Samples& samples);
 
