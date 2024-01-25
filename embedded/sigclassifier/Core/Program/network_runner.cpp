@@ -93,20 +93,23 @@ void NetworkRunner::RunNetwork(const Acquisition::Samples& samples) {
 		return;
 	}
 
-	float outData[6];
-	for(size_t i = 0; i < 6; i++) {
-		outData[i] = _modelOutput->data.f[i];
+	Output out;
+	for(size_t i = 0; i < _netOutputClassesCnt; i++) {
+		out[i] = _modelOutput->data.f[i];
 	}
 
+	PrintOutput(out);
+}
+
+void NetworkRunner::PrintOutput(const Output& out) {
 	std::string outStr = "Result: ";
 
-	constexpr uint8_t outClasses = 6;
-	for(int i = 0; i < outClasses; i++) {
-		float result = outData[i];
-		outStr += FloatToPercent(result) + (i == outClasses - 1 ? "\r\n" : ", ");
+	for(size_t i = 0; i < _netOutputClassesCnt; i++) {
+		outStr += FloatToPercent(out[i]) + (i == _netOutputClassesCnt - 1 ? "\r\n" : ", ");
 	}
 
 	_console << outStr.c_str();
+
 }
 
 std::string NetworkRunner::FloatToPercent(float f) {

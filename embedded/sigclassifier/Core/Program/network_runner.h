@@ -30,7 +30,11 @@ private:
 	constexpr static size_t _networkInputSize = 100;
 	static_assert(_networkInputSize == Acquisition::sampleNo);
 
+	constexpr static size_t _netOutputClassesCnt = 6;
 
+	typedef std::array<float, _netOutputClassesCnt> Output;
+
+	void PrintOutput(const Output& out);
 	std::string FloatToPercent(float f);
 
 	void RunNetwork(const Acquisition::Samples& samples);

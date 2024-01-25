@@ -15,7 +15,7 @@ public:
 
 private:
 
-	constexpr static uint32_t _managePeriodMs = 150;
+	constexpr static uint32_t _managePeriodMs = 1000;
 	uint32_t _lastManageRunTime;
 
 	constexpr static uint32_t _initSamplingFreq = 100000;
@@ -45,7 +45,7 @@ public:
 
 	bool Start(void);
 	bool IsAcquisitionInProgress(void) const { return _acqInProgress; }
-	bool AreSamplesReady(void) const { return _samplesReady; }
+	bool AreSamplesReady(void) const { return _samplesReady && (_canStartAcq == false); }
 	const Samples GetSamples(void) { _canStartAcq = true; return _samples; }
 
 	uint32_t SetSamplingFreq(uint32_t freqHz);
