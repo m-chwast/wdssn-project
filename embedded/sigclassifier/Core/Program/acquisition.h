@@ -15,7 +15,7 @@ public:
 
 private:
 
-	constexpr static uint32_t _managePeriodMs = 1000;
+	constexpr static uint32_t _managePeriodMs = 333;
 	uint32_t _lastManageRunTime;
 
 	constexpr static uint32_t _initSamplingFreq = 100000;
