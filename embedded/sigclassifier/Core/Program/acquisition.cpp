@@ -47,11 +47,13 @@ void Acquisition::Manage(void) {
 
 	bool startOk = Start();
 
-	if(startOk == false) {
-		_console << "Acquisition error: not started\r\n";
-	}
-	else {
-		_console << "Acquisition started\r\n";
+	if(_logEvents) {
+		if(startOk == false) {
+			_console << "Acquisition error: not started\r\n";
+		}
+		else {
+			_console << "Acquisition started\r\n";
+		}
 	}
 }
 

@@ -20,6 +20,8 @@ private:
 
 	constexpr static uint32_t _initSamplingFreq = 100000;
 
+	constexpr static bool _logEvents = false;
+
 	Console& _console;
 	TIM_HandleTypeDef& _samplingHtim;
 	ADC_HandleTypeDef& _hadc;
