@@ -8,23 +8,32 @@
 
 
 class Acquisition : public Module {
+public:
+	constexpr static uint32_t sampleNo = 100;
+
+	typedef std::array<uint8_t, sampleNo> Samples;
+
 private:
 
-	constexpr static uint32_t _managePeriodMs = 150;
+	constexpr static uint32_t _managePeriodMs = 333;
 	uint32_t _lastManageRunTime;
 
 	constexpr static uint32_t _initSamplingFreq = 100000;
-	constexpr static uint32_t _sampleNo = 100;
+
+	constexpr static bool _logEvents = false;
 
 	Console& _console;
 	TIM_HandleTypeDef& _samplingHtim;
 	ADC_HandleTypeDef& _hadc;
 
-	std::array<uint8_t, _sampleNo> _samples;
+	Samples _samples;
 	volatile bool _acqInProgress;
-
+	bool _samplesReady = false;
+	bool _canStartAcq = false;
 
 	static std::vector<Acquisition*> _acquisitions;
+
+	void ProcessSamples(void);
 
 	static void GeneralADCConvCpltCb(ADC_HandleTypeDef* hdma);
 	void ADCConvCpltCb(void);
@@ -37,7 +46,9 @@ public:
 	void Manage(void) override;
 
 	bool Start(void);
-	bool IsAcquisitionInProgress(void) { return _acqInProgress; }
+	bool IsAcquisitionInProgress(void) const { return _acqInProgress; }
+	bool AreSamplesReady(void) const { return _samplesReady && (_canStartAcq == false); }
+	const Samples GetSamples(void) { _canStartAcq = true; return _samples; }
 
 	uint32_t SetSamplingFreq(uint32_t freqHz);
 };

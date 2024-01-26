@@ -12,8 +12,8 @@ import dataproc
 def create_model() -> Sequential:
     model = Sequential()
     model.add(Input(shape=(100,)))
-    model.add(Dense(units=32, activation="tanh"))
-    model.add(Dense(units=32, activation="tanh"))
+    model.add(Dense(units=32, activation="sigmoid"))
+    model.add(Dense(units=32, activation="sigmoid"))
     model.add(Dense(units=6, activation="softmax"))
 
     model.compile(loss="categorical_crossentropy", optimizer=SGD(learning_rate=0.01), metrics=["accuracy"])
@@ -27,7 +27,7 @@ def model_train(
     valid_data, valid_labels = np.array(data[1][0]), np.array(data[1][1])
     
     validation=(valid_data, valid_labels)
-    model.fit(x=train_data, y=train_labels, batch_size=8, epochs=epochs, verbose=1, validation_data=validation)
+    model.fit(x=train_data, y=train_labels, batch_size=3, epochs=epochs, verbose=1, validation_data=validation)
 
 def create_model_quant_aware(model : Sequential) -> Sequential:
     quant_model = tfmot.quantization.keras.quantize_model(model)

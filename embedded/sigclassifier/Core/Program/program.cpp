@@ -4,6 +4,7 @@
 #include "adc.h"
 #include "console.h"
 #include "acquisition.h"
+#include "network_runner.h"
 
 
 class Program {
@@ -13,6 +14,7 @@ private:
 
 	Console _console;
 	Acquisition _acquisition;
+	NetworkRunner _networkRunner;
 
 public:
 
@@ -27,9 +29,11 @@ public:
 
 Program::Program(void)
 	: _console{Console(huart2)},
-	  _acquisition{Acquisition(_console, htim6, hadc)} {
+	  _acquisition{Acquisition(_console, htim6, hadc)},
+	  _networkRunner{_console, _acquisition} {
 
     _modules.push_back(&_acquisition);
+    _modules.push_back(&_networkRunner);
 	//console has to be pushed back last to allow for blocking sending during modules init
 	_modules.push_back(&_console);
 }

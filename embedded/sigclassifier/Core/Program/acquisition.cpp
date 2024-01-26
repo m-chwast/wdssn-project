@@ -17,6 +17,8 @@ void Acquisition::Init(void) {
 
 	HAL_ADC_RegisterCallback(&_hadc, HAL_ADC_CONVERSION_COMPLETE_CB_ID, &GeneralADCConvCpltCb);
 
+	Start();
+
 	_console << "Acquisition init ok\r\n";
 }
 
@@ -31,18 +33,32 @@ void Acquisition::Manage(void) {
 		return;
 	}
 
+	if(_samplesReady == false) {
+		ProcessSamples();
+		_samplesReady = true;
+		_canStartAcq = false;
+	}
+
+	if(_canStartAcq == false) {
+		return;
+	}
+
+	_samplesReady = false;
+
 	bool startOk = Start();
 
-	if(startOk == false) {
-		_console << "Acquisition error: not started\r\n";
-	}
-	else {
-		_console << "Acquisition started\r\n";
+	if(_logEvents) {
+		if(startOk == false) {
+			_console << "Acquisition error: not started\r\n";
+		}
+		else {
+			_console << "Acquisition started\r\n";
+		}
 	}
 }
 
 bool Acquisition::Start(void) {
-	HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), _sampleNo);
+	HAL_StatusTypeDef adcStatus = HAL_ADC_Start_DMA(&_hadc, reinterpret_cast<uint32_t*>(_samples.data()), sampleNo);
 	HAL_StatusTypeDef timStatus = HAL_TIM_Base_Start(&_samplingHtim);
 
 	if(adcStatus != HAL_OK || timStatus != HAL_OK) {
@@ -82,6 +98,36 @@ uint32_t Acquisition::SetSamplingFreq(uint32_t freqHz) {
 	_console << " Hz, obtained " << freqObtained << " Hz\r\n";
 
 	return freqObtained;
+}
+
+
+void Acquisition::ProcessSamples(void) {
+	if(IsAcquisitionInProgress()) {
+		return;
+	}
+
+	uint16_t minIndex = 0, maxIndex = 0;
+	for(uint16_t i = 0; i < sampleNo; i++) {
+		if(_samples[i] < _samples[minIndex]) {
+			minIndex = i;
+		}
+		if(_samples[i] > _samples[maxIndex]) {
+			maxIndex = i;
+		}
+	}
+
+	uint8_t minVal = _samples[minIndex];
+	uint8_t maxVal = _samples[maxIndex];
+	uint8_t range = maxVal - minVal;
+
+	if(range == 0) {
+		return;
+	}
+
+	for(uint8_t& sample : _samples) {
+		sample -= minVal;
+		sample = (uint32_t)sample * 255 / range;
+	}
 }
 
 void Acquisition::ADCConvCpltCb(void) {

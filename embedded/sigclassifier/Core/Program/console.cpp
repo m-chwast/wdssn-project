@@ -80,3 +80,12 @@ void Console::GeneralHuartTxCpltCallback(UART_HandleTypeDef* huart) {
 		}
 	}
 }
+
+// method for tensorflow MicroErrorReporter
+
+void DebugLog(const char* s) {
+	if(Console::_consoles.size() == 0) {
+		return;
+	}
+	Console::_consoles[0]->operator<<(s);
+}
