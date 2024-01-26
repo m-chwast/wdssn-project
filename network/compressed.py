@@ -22,12 +22,12 @@ def create_model() -> Sequential:
 def model_train(
         model : Sequential, 
         data : ((np.ndarray, np.ndarray), (np.ndarray, np.ndarray)),
-        epochs = 20):
+        epochs = 12):
     train_data, train_labels = np.array(data[0][0]), np.array(data[0][1])
     valid_data, valid_labels = np.array(data[1][0]), np.array(data[1][1])
     
     validation=(valid_data, valid_labels)
-    model.fit(x=train_data, y=train_labels, batch_size=2, epochs=epochs, verbose=1, validation_data=validation)
+    model.fit(x=train_data, y=train_labels, batch_size=3, epochs=epochs, verbose=1, validation_data=validation)
 
 def create_model_quant_aware(model : Sequential) -> Sequential:
     quant_model = tfmot.quantization.keras.quantize_model(model)
