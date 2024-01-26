@@ -30,40 +30,6 @@ void NetworkRunner::Init(void) {
 	    return;
 	}
 
-	TfLiteTensor* _modelInput = _interpreter->input(0);
-	TfLiteTensor* _modelOutput = _interpreter->output(0);
-
-	float inData[100];
-	for(int i = 0; i < 100; i++) {
-		inData[i] = i > 25 ? 1 : 0;
-	}
-
-	for(int i = 0; i < 100; i++) {
-		_modelInput->data.f[i] = inData[i];
-	}
-
-	TfLiteStatus invokeStatus = _interpreter->Invoke();
-	if(invokeStatus != kTfLiteOk) {
-		TF_LITE_REPORT_ERROR(_errorReporter, "Invoke failed\r\n");
-		return;
-	}
-
-	float outData[6];
-	for(int i = 0; i < 6; i++) {
-		outData[i] = _modelOutput->data.f[i];
-	}
-
-	_console << "Result: ";
-
-	std::string percent = "";
-
-	for(int i = 0; i < 6; i++) {
-		float result = outData[i];
-		percent += FloatToPercent(result) + ", ";
-	}
-
-	_console << percent.c_str() << "\r\n";
-
 	_console << "Network Runner init ok\r\n";
 }
 
