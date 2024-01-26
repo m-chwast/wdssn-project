@@ -1,5 +1,9 @@
+# python
 __pycache__
+
+# data
 data.csv
 data
 model.tflite
 models
+model.h5
