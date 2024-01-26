@@ -4,6 +4,6 @@ __pycache__
 # data
 data.csv
 data
-
-# models
+model.tflite
+models
 model.h5
